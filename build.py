@@ -565,7 +565,17 @@ LEGAL = [
 for name, title, desc, share_title in LEGAL:
     body = (HERE / "legal" / name.replace(".html", "-body.html")
             ).read_text(encoding="utf-8")
+
+    # Drop the note at the top of the file before looking for anything. Both
+    # notes open with the words "The <main> of ...", so searching the raw file
+    # for "<main" finds the one INSIDE the comment: the slice then started
+    # eleven characters in, the opening <!-- was left behind, and the whole
+    # internal note shipped as the first paragraph of the live page. It did.
+    body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
+
     body = body[body.index("<main"):body.index("</main>") + len("</main>")]
+    assert body.startswith("<main id="), f"{name}: body does not start at <main>"
+    assert "<!--" not in body, f"{name}: a comment survived into the page"
 
     legal = (
         head_shell(title, desc, f"https://cex.koeln/{name}",
