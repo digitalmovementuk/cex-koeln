@@ -270,7 +270,7 @@ HEADER = """  <header class="cx-header">
 # =============================================================================
 # Head
 # =============================================================================
-TITLE = "CEx | Unternehmensberatung für erfolgreiche Projektumsetzung | Prozesse, Change, KI, EAM"
+TITLE = "CEx | Unternehmensberatung Köln für Prozesse, Projekte, KI"
 DESC = ("CEx berät aus Köln zu Prozessoptimierung, Projektmanagement, "
         "Digitalisierung, Change Management, KI und Enterprise Architecture — "
         "Senior-Beratung für komplexe IT- und Digitalisierungsvorhaben.")
@@ -319,7 +319,7 @@ WEBPAGE_LD = """{
   "@type": "WebPage",
   "@id": "https://cex.koeln/#webpage",
   "url": "https://cex.koeln/",
-  "name": "CEx | Unternehmensberatung für erfolgreiche Projektumsetzung | Prozesse, Change, KI, EAM",
+  "name": "CEx | Unternehmensberatung Köln für Prozesse, Projekte, KI",
   "inLanguage": "de-DE",
   "isPartOf": {
     "@type": "WebSite",
