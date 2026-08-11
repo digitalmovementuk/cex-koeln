@@ -10,7 +10,8 @@ CEx-Design, damit unter der Marke etwas Echtes erreichbar ist, solange die
 komplette Website noch gebaut wird.
 
 Live über GitHub Pages, Repo `digitalmovementuk/cex-koeln`, Branch `main`,
-Wurzelverzeichnis. Die `CNAME`-Datei hält die Domain.
+Wurzelverzeichnis. Die `CNAME`-Datei hält die Domain. HTTPS ist erzwungen; das
+Zertifikat kommt von GitHub und deckt `cex.koeln` und `www.cex.koeln` ab.
 
 ## Wie die Seite entsteht
 
@@ -67,6 +68,17 @@ Alle übrigen Stylesheets, `script.js`, die Schriften und die Medien kommen aus
 
 Die Domain liegt bei **IONOS im Konto des Kunden**. Der Apex zeigt auf die vier
 GitHub-Pages-Adressen, `www` ist ein CNAME auf `digitalmovementuk.github.io`.
+
+Wenn die Vorschau in Slack oder WhatsApp plötzlich ohne Bild erscheint, liegt es
+fast immer am Zertifikat und nicht an den Meta-Angaben: Das Vorschaubild wird
+über `https://` geholt, und ohne gültiges Zertifikat scheitert dieser Abruf
+stillschweigend. Prüfen mit:
+
+```
+curl -sS -o /dev/null -w '%{http_code} tls=%{ssl_verify_result}\n' https://cex.koeln/media/cex-og-1200x630.jpg
+```
+
+`tls=0` heißt, das Zertifikat ist in Ordnung.
 
 Die Einträge für die E-Mail — `MX` auf `mx00`/`mx01.ionos.de`, der SPF-Eintrag,
 die DKIM- und DMARC-Einträge und `autodiscover` — gehören zum Postfach des
