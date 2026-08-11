@@ -1,0 +1,283 @@
+/* ==========================================================================
+   CEx DESIGN SYSTEM — CORE                                        cex.koeln
+   Tokens, invariants and the rules every single page shares.
+   Loaded by all 36 pages, in the slot the inline <style> blocks used to hold,
+   so founders.css / polish.css / hub-quality.css keep the authority they had.
+
+   The service-template component library lives in cx-template.css, which the
+   32 template pages load alongside this. The homepage, the sitemap and the two
+   legal pages are deliberately NOT on that template and load only this file.
+
+   RULES OF USE
+   1. Change a shared value here, once. Never chase it across pages.
+   2. Do not re-declare anything from here in a page's <style> block —
+      a page-level override is how this site drifted in the first place.
+   3. A component that appears on a second page stops being page-local and
+      moves into cx-template.css.
+
+   INVARIANTS (do not reintroduce)
+   - No cream. The retired #FAF6EC / #f4efe3 / #ede5d2 family is gone.
+   - No rounded corners anywhere, including buttons, inputs, images, badges.
+   - The two brand colours are FIXED by the client's brand sheet and may never
+     be changed: #1E2327 (Schwarzton, the C and E of the logo) and #FF7A00
+     (Orangeton, the X). Everything else in the palette serves those two.
+   - Text on the orange is ALWAYS #1E2327 (6.1:1). White on this orange is
+     2.9:1 and fails at every text size. Do not use it.
+   - Colour is declared HERE and nowhere else. A page that sets its own colour
+     is a bug, not a variation.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOKENS — palette, type scale, spacing scale, layout metrics
+   --------------------------------------------------------------------------
+   Hand-authored, NOT lifted from the pages: the page :root blocks still carry
+   the stale --cx-yellow-tint:.12 that polish.css overrides at runtime, so
+   hoisting their majority would have quietly undone that fix.
+   -------------------------------------------------------------------------- */
+:root {
+  /* ---------------------------------------------------------------------- */
+  /* COLOUR — theme "Kept Anchor".                                          */
+  /* Warm daylight around one deliberate block of night. The neutrals are   */
+  /* warm greys (warm-grey, NOT cream — the blue channel stays high), the   */
+  /* band keeps #1E2327 and is the only dark thing on the page, and the     */
+  /* orange fills the primary button.                                       */
+  /* ---------------------------------------------------------------------- */
+
+  /* The two fixed brand colours ------------------------------------------ */
+  --cx-charcoal:     #1E2327;   /* BRAND. Ink, and the one dark band.       */
+  --cx-accent:       #FF7A00;   /* BRAND. The single accent.                */
+
+  /* Surfaces -------------------------------------------------------------- */
+  --cx-surface:      #FCFBFA;   /* page surface: body, nav, light sections  */
+  --cx-surface-2:    #F5F3F1;   /* alternating section, one step down       */
+  --cx-warm-2:       #F3F0ED;   /* card / component fill                    */
+  --cx-warm-4:       #E2DDD7;   /* hairline on the card fill                */
+
+  /* The band — the only dark plane on the site ---------------------------- */
+  --cx-band:         var(--cx-charcoal);
+  --cx-band-ink:     #F5F3F1;
+  --cx-band-muted:   #AEB4B9;
+
+  /* Ink ------------------------------------------------------------------- */
+  --cx-charcoal-2:   #3B4148;
+  --cx-charcoal-3:   #596066;
+  --cx-charcoal-4:   #6E757C;
+  --muted:           #4E555C;   /* secondary text, 7.3:1 on the surface     */
+
+  /* Accent ---------------------------------------------------------------- */
+  --cx-accent-2:     #F07300;   /* hover                                    */
+  --cx-accent-3:     #D96800;   /* active                                   */
+  --cx-accent-soft:  #FF9433;   /* the orange as it appears ON the band     */
+  --cx-accent-on:    #1E2327;   /* text ON the orange. Never white. 6.1:1.  */
+  --cx-accent-tint:  rgba(255,122,0,.08);
+  /* The orange glow laid over a dark band. One value, used by every band.
+     It was authored per-component at .16–.20, which composites over #1E2327
+     to roughly #4B341F — a muddy brown that belongs to no ramp on this site
+     and reads as a rendering fault, not a decision. At .07 the band stays
+     #1E2327 and merely warms. Under "Kept Anchor" the orange is rationed. */
+  --band-glow:       rgba(255,122,0,.07);
+
+  /* Lines ----------------------------------------------------------------- */
+  --line:            rgba(30,35,39,.12);
+  --line-strong:     rgba(30,35,39,.26);
+  --line-on-dark:    rgba(255,255,255,.12);
+  --line-on-band:    var(--line-on-dark);
+
+  /* Forms ----------------------------------------------------------------- */
+  --form-bg:         #FFFFFF;
+  --form-line:       var(--cx-warm-4);
+  --field-bg:        #FAF8F7;
+  --field-line:      #D6D0CA;
+
+  /* Hero — lightened: the scrim drops ~a third so the film breathes ------- */
+  --hero-overlay:    linear-gradient(180deg, rgba(30,35,39,.62) 0%,
+                                             rgba(30,35,39,.42) 60%,
+                                             rgba(30,35,39,.34) 100%);
+  /* --hero-scrim-split is gone. It existed because the 32 service pages had a
+     second, different hero — a left/right split over a per-page photograph.
+     There is one hero now and it uses --hero-overlay above, like the homepage
+     always did. */
+  --hero-ink:        #FFFFFF;
+  --hero-lead:       rgba(255,255,255,.86);
+  --hero-eyebrow:    var(--cx-accent-soft);
+  --hero-btn-line:   rgba(255,255,255,.55);
+  --hero-img-filter: brightness(1.12) saturate(.85);
+
+  /* Buttons — orange fills the primary, always with #1E2327 on it --------- */
+  --btn-p-bg:        var(--cx-accent);
+  --btn-p-fg:        var(--cx-accent-on);
+  --btn-p-icon-bg:   var(--cx-charcoal);
+  --btn-p-icon-fg:   var(--cx-surface);
+
+  /* Legacy aliases — kept so older markup keeps resolving ----------------- */
+  /* Do not author against these. They exist to stop old pages breaking.    */
+  --cx-yellow:       var(--cx-accent);
+  --cx-yellow-2:     var(--cx-accent-2);
+  --cx-yellow-3:     var(--cx-accent-3);
+  --cx-yellow-soft:  var(--cx-accent-soft);
+  --cx-yellow-tint:  var(--cx-accent-tint);
+  --cx-warm:         var(--cx-surface);     /* cream retired -> surface     */
+  --cx-warm-3:       var(--cx-warm-2);      /* cream retired -> card fill   */
+  --bg:              var(--cx-surface);
+  --ink:             var(--cx-charcoal);
+  --acn-gray-1:      var(--muted);
+  --acn-gray-2:      #8A8F94;
+  --acn-gray-3:      #C4C0BB;
+  --acn-paper:       var(--cx-surface);
+  --acn-paper-2:     var(--cx-warm-2);
+  --acn-paper-3:     var(--cx-warm-2);
+  --acn-white:       var(--cx-surface);
+  --acn-ink-2:       var(--cx-charcoal-2);
+  --acn-ink-3:       var(--cx-charcoal-3);
+  --acn-purple-2:    var(--cx-accent-2);
+  --acn-purple-3:    var(--cx-accent-3);
+  --acn-purple-soft: var(--cx-accent-soft);
+  --acn-purple-tint: var(--cx-accent-tint);
+  --acn-black:  var(--cx-charcoal);
+  --acn-ink:    var(--cx-charcoal);
+  --acn-purple: var(--cx-accent);
+
+  /* Type ------------------------------------------------------------------ */
+  --font-sans: "Inter", "Inter Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-sans);
+  --fs-body:  1rem;                                 /* 16px */
+  --lh-body:  1.625;                                /* 26px */
+  --fs-small: .875rem;                              /* 14px */
+  --fs-h3:    1.25rem;                              /* 20px */
+  --fs-h2:    clamp(2.25rem, 3.65vw, 3.25rem);      /* 52px @1440 */
+  --fs-h1:    clamp(2.4rem, 3.9vw, 3.45rem);        /* 55px @1440 */
+
+  /* Spacing scale — every gap, pad and margin comes from here ------------- */
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;  --sp-4: 16px;
+  --sp-5: 20px;  --sp-6: 24px;  --sp-7: 32px;  --sp-8: 40px;
+  --sp-9: 48px;  --sp-10: 64px; --sp-11: 80px; --sp-12: 112px;
+
+  /* Named component spacing (so intent survives) -------------------------- */
+  --card-pad:    var(--sp-7);        /* 32px — problem / industry cards */
+  --card-pad-lg: 36px var(--sp-7);   /* 36/32 — service cards           */
+  --grid-gap:    var(--sp-7);        /* 32px — card grids               */
+  --section-py:  clamp(80px, 9vw, 140px);   /* 112px @1440 */
+
+  /* Layout ---------------------------------------------------------------- */
+  --container:    1280px;
+  --container-px: clamp(24px, 5vw, 88px);   /* 72px @1440 */
+
+  /* Shape & motion -------------------------------------------------------- */
+  --radius: 0;                       /* the site is square. Do not change. */
+  --dur:  550ms;
+  --ease: cubic-bezier(.85, 0, 0, 1);
+  --ease-out: var(--ease);
+}
+
+/* The accent tint is .08 over the warm card fill. The old .12-over-#E8E8E8
+   problem (it composited to a tan indistinguishable from the retired cream)
+   is gone with the card fill itself: #F3F0ED is warm-grey, not cream. */
+
+/* Square, everywhere. A system invariant, not a component choice. */
+:where(*, *::before, *::after) { border-radius: var(--radius); }
+
+/* Form controls do not inherit colour from the page — left alone they paint
+   the UA default, pure black, which is the one ink on the site that is not
+   #1E2327. Caught by a computed-style sweep, invisible to a source grep. */
+:where(input, select, textarea, button) {
+  color: var(--cx-charcoal);
+  font-family: inherit;
+}
+:where(input, textarea)::placeholder { color: var(--muted); opacity: 1 }
+
+
+/* --------------------------------------------------------------------------
+   2. FOOTER
+   -------------------------------------------------------------------------- */
+.footer {
+  background:var(--cx-band);
+  color:var(--cx-band-muted);
+  padding:56px 0 28px;
+  border-top:1px solid var(--line-on-dark);
+}
+.footer a { color:var(--cx-band-muted); text-decoration:none }
+.footer a:hover { color:var(--cx-band-ink); text-decoration:underline; text-underline-offset:3px }
+.footer__grid {
+  display:grid;
+  grid-template-columns:1.7fr 1fr 1fr 1fr;
+  gap:32px;
+  padding-bottom:30px;
+  border-bottom:1px solid var(--line-on-band);
+}
+.footer__logo {
+  font-size:1.6rem;
+  font-weight:800;
+  letter-spacing:-.02em;
+  color:var(--cx-band-ink);
+  margin-bottom:14px;
+}
+.footer__logo span { color:var(--cx-accent) }
+.footer__brand p {
+  font-size:.9rem;
+  line-height:1.6;
+  color:var(--cx-band-muted);
+  max-width:42ch;
+  margin:0;
+}
+.footer__col strong {
+  display:block;
+  color:var(--cx-band-ink);
+  font-size:.78rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.footer__col a { display:block; font-size:.9rem; line-height:1.95 }
+.footer__cookie {
+  display:block;
+  background:none;
+  border:0;
+  color:var(--cx-band-muted);
+  font:inherit;
+  font-size:.9rem;
+  line-height:1.95;
+  padding:0;
+  cursor:pointer;
+  text-align:left;
+}
+.footer__cookie:hover { color:var(--cx-band-ink); text-decoration:underline; text-underline-offset:3px }
+.footer__bottom {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:10px;
+  padding-top:20px;
+  font-size:.82rem;
+  color:var(--cx-band-muted);
+}
+
+
+/* ==========================================================================
+   3. RESPONSIVE — min-width first, then max-width descending.
+   The mobile block is LAST so it wins on source order.
+   ========================================================================== */
+
+@media(max-width:760px) {
+  .footer__grid { grid-template-columns:1fr 1fr }
+  .footer__brand { grid-column:1/-1 }
+
+  /* The hero scrim is tuned for the desktop layout, where the copy sits over
+     the river — dark water, so .34 at the foot of the gradient is plenty. On a
+     phone the columns stack and that same copy lands on the sky, which is the
+     brightest part of the plate: white text at .86 over it is roughly 2:1 and
+     unreadable in daylight. Even the scrim across the whole frame, and hold it
+     through the lower two thirds where the lead and the CTAs sit. Redefining
+     the token means every consumer picks it up; nothing needs to know. */
+  :root {
+    --hero-overlay: linear-gradient(180deg, rgba(30,35,39,.70) 0%,
+                                            rgba(30,35,39,.66) 45%,
+                                            rgba(30,35,39,.74) 100%);
+  }
+}
+
+@media(max-width:480px) {
+  .footer__grid { grid-template-columns:1fr; text-align:center }
+  .footer__brand p { margin:0 auto }
+  .footer__cookie { text-align:center; width:100% }
+  .footer__bottom { justify-content:center; text-align:center }
+}

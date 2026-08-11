@@ -1,0 +1,9 @@
+# cex.koeln — temporary homepage while the full site is being built.
+# Crawlable on purpose: the page carries the real company, the real services
+# and the real contact details, so it is what should be found under the brand
+# in the meantime. It is replaced, not redirected, when the full site ships.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://cex.koeln/sitemap.xml

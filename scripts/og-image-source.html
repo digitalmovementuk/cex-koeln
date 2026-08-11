@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>CEx — Share-Karten (Quelle)</title>
+<!--
+  ==========================================================================
+  CEx — the share cards, rendered from the hero.
+  --------------------------------------------------------------------------
+  This file is the source of media/cex-og-1200x630.jpg and
+  media/cex-thumbnail-1200x1200.jpg. It is not linked from the site and is
+  never crawled; it exists so the cards can be rebuilt instead of retouched.
+
+  The plate is media/cex-hero-still.jpg — a frame lifted from the hero film
+  (media/cx-hero-background-calm.mp4), so the card and the page a click later
+  are literally the same picture. Everything laid over it is taken from
+  cx-hero.css verbatim: the same brightness/saturate lift, the same charcoal
+  scrim, the same uppercase Inter at -0.035em, the same orange chevron, the
+  same orange bar under the lead. A left-to-right scrim is the one addition —
+  a share card is read at postage-stamp size and the copy side has to hold.
+
+  To rebuild:  bash scripts/render-share-cards.sh
+  ==========================================================================
+-->
+<style>
+  @font-face { font-family:"Inter"; src:url("../fonts/inter-latin-500-normal.woff2") format("woff2"); font-weight:500; font-display:block; }
+  @font-face { font-family:"Inter"; src:url("../fonts/inter-latin-700-normal.woff2") format("woff2"); font-weight:700; font-display:block; }
+
+  :root {
+    --cx-charcoal: #1E2327;
+    --cx-accent:   #FF7A00;
+    --hero-img-filter: brightness(1.12) saturate(.85);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#555; font-family:"Inter", sans-serif; display:flex; flex-direction:column; align-items:flex-start; gap:40px; padding:40px; }
+
+  .card {
+    position:relative;
+    overflow:hidden;
+    background:var(--cx-charcoal);
+    color:#fff;
+    isolation:isolate;
+  }
+  .card__plate {
+    position:absolute; inset:0; z-index:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    filter:var(--hero-img-filter);
+  }
+  /* The hero scrim. Lighter than --hero-overlay on purpose: a second,
+     left-to-right scrim sits on top of it here, and the two multiply. At the
+     hero's own .62 the pair composited to ~.96 on the copy side and the film
+     vanished — the card read as a plain grey box with type on it. */
+  .card__scrim-v {
+    position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg, rgba(30,35,39,.38) 0%,
+                                       rgba(30,35,39,.20) 58%,
+                                       rgba(30,35,39,.30) 100%);
+  }
+  /* The one addition: the copy side goes darker so white type survives a
+     200px-wide preview in a chat window, and the picture side stays open so
+     the Dom and the Hohenzollernbrücke are still recognisable at that size. */
+  .card__scrim-h {
+    position:absolute; inset:0; z-index:2;
+    background:linear-gradient(90deg, rgba(30,35,39,.72) 0%,
+                                      rgba(30,35,39,.62) 40%,
+                                      rgba(30,35,39,.24) 74%,
+                                      rgba(30,35,39,.06) 100%);
+  }
+  .card__body {
+    position:relative; z-index:3;
+    height:100%;
+    display:flex; flex-direction:column;
+  }
+  .card__logo { display:block; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:12px;
+    font-weight:500; text-transform:uppercase; letter-spacing:.18em;
+    color:rgba(255,255,255,.88);
+  }
+  .eyebrow__dot { display:block; background:var(--cx-accent); }
+  .title {
+    font-weight:700; text-transform:uppercase;
+    line-height:1.03; letter-spacing:-.035em;
+  }
+  .title__line { display:block; white-space:nowrap; }
+  .title__line--accent { display:flex; align-items:center; }
+  .title__glyph { flex-shrink:0; color:var(--cx-accent); }
+  .title__glyph svg { width:100%; height:100%; }
+  .lead-wrap { display:flex; align-items:flex-start; }
+  .lead-bar { display:block; background:var(--cx-accent); flex-shrink:0; }
+  .lead { color:rgba(255,255,255,.90); font-weight:500; }
+  .foot { margin-top:auto; display:flex; align-items:center; }
+  .foot__rule { flex:1; height:1px; background:rgba(255,255,255,.22); }
+  .foot__url { font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.82); }
+
+  /* ---- OG / Twitter card: 1200 x 630 ------------------------------------ */
+  #og { width:1200px; height:630px; }
+  #og .card__body { padding:56px 64px; }
+  #og .card__logo { width:150px; height:60px; }
+  #og .eyebrow { font-size:16px; margin-top:58px; }
+  #og .eyebrow__dot { width:9px; height:9px; }
+  #og .title { font-size:64px; margin-top:18px; }
+  #og .title__line--accent { gap:18px; }
+  #og .title__glyph { width:52px; height:52px; }
+  #og .lead-wrap { gap:18px; margin-top:26px; }
+  #og .lead-bar { width:42px; height:5px; margin-top:10px; }
+  #og .lead { font-size:21px; line-height:1.45; white-space:nowrap; }
+  #og .foot { gap:24px; padding-top:34px; }
+  #og .foot__url { font-size:15px; }
+
+  /* ---- Square thumbnail: 1200 x 1200 ------------------------------------ */
+  #thumb { width:1200px; height:1200px; }
+  #thumb .card__scrim-h {
+    background:linear-gradient(180deg, rgba(30,35,39,.34) 0%,
+                                       rgba(30,35,39,.52) 38%,
+                                       rgba(30,35,39,.86) 74%,
+                                       rgba(30,35,39,.94) 100%);
+  }
+  #thumb .card__body { padding:72px 76px; }
+  #thumb .card__logo { width:200px; height:80px; }
+  #thumb .eyebrow { font-size:20px; margin-top:auto; }
+  #thumb .eyebrow__dot { width:11px; height:11px; }
+  #thumb .title { font-size:84px; margin-top:24px; }
+  #thumb .title__line--accent { gap:22px; }
+  #thumb .title__glyph { width:70px; height:70px; }
+  #thumb .lead-wrap { gap:22px; margin-top:34px; }
+  #thumb .lead-bar { width:52px; height:6px; margin-top:13px; }
+  #thumb .lead { font-size:27px; line-height:1.45; white-space:nowrap; }
+  #thumb .foot { margin-top:52px; gap:28px; }
+  #thumb .foot__url { font-size:19px; }
+</style>
+</head>
+<body>
+
+<!-- 1200 x 630 ------------------------------------------------------------ -->
+<div class="card" id="og">
+  <img class="card__plate" src="../media/cex-hero-still.jpg" alt="">
+  <div class="card__scrim-v"></div>
+  <div class="card__scrim-h"></div>
+  <div class="card__body">
+    <img class="card__logo" src="../media/cex-logo-on-dark.png" alt="CEx">
+    <span class="eyebrow"><span class="eyebrow__dot"></span><span>CEx · Beratung</span></span>
+    <h1 class="title">
+      <span class="title__line">Komplexe</span>
+      <span class="title__line">Veränderungen,</span>
+      <span class="title__line title__line--accent">
+        <span class="title__glyph"><svg viewBox="0 0 80 80" fill="none"><path d="M22 14 L58 40 L22 66" stroke="currentColor" stroke-width="11" stroke-linecap="square" stroke-linejoin="miter"/></svg></span>
+        <span>klare Umsetzung</span>
+      </span>
+    </h1>
+    <div class="lead-wrap">
+      <span class="lead-bar"></span>
+      <p class="lead">Prozesse, Projekte, Digitalisierung, Change, KI, Architektur.</p>
+    </div>
+    <div class="foot"><span class="foot__url">cex.koeln</span><span class="foot__rule"></span><span class="foot__url">Köln</span></div>
+  </div>
+</div>
+
+<!-- 1200 x 1200 ----------------------------------------------------------- -->
+<div class="card" id="thumb">
+  <img class="card__plate" src="../media/cex-hero-still.jpg" alt="">
+  <div class="card__scrim-v"></div>
+  <div class="card__scrim-h"></div>
+  <div class="card__body">
+    <img class="card__logo" src="../media/cex-logo-on-dark.png" alt="CEx">
+    <span class="eyebrow"><span class="eyebrow__dot"></span><span>CEx · Beratung</span></span>
+    <h1 class="title">
+      <span class="title__line">Komplexe</span>
+      <span class="title__line">Veränderungen,</span>
+      <span class="title__line title__line--accent">
+        <span class="title__glyph"><svg viewBox="0 0 80 80" fill="none"><path d="M22 14 L58 40 L22 66" stroke="currentColor" stroke-width="11" stroke-linecap="square" stroke-linejoin="miter"/></svg></span>
+        <span>klare Umsetzung</span>
+      </span>
+    </h1>
+    <div class="lead-wrap">
+      <span class="lead-bar"></span>
+      <p class="lead">Prozesse, Projekte, Digitalisierung, Change, KI, Architektur.</p>
+    </div>
+    <div class="foot"><span class="foot__url">cex.koeln</span><span class="foot__rule"></span><span class="foot__url">Köln</span></div>
+  </div>
+</div>
+
+<script>
+  /* Render mode. Opened plainly, this page shows both cards side by side for
+     eyeballing. Opened as ?card=og or ?card=thumb it strips everything else so
+     a headless window sized to the card screenshots it exactly. */
+  (function () {
+    var want = new URLSearchParams(location.search).get('card');
+    if (!want) return;
+    document.body.style.cssText = 'margin:0;padding:0;background:#000;display:block';
+    ['og', 'thumb'].forEach(function (id) {
+      if (id !== want) document.getElementById(id).remove();
+    });
+    document.fonts.ready.then(function () { document.documentElement.dataset.ready = '1'; });
+  })();
+</script>
+</body>
+</html>

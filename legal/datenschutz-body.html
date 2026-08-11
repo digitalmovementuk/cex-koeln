@@ -1,0 +1,170 @@
+<!--
+  The <main> of datenschutz.html for cex.koeln.
+
+  Written for THIS deployment, not copied from the production site. Every claim
+  in it was checked against what the page actually does:
+
+    · the consent dialog writes localStorage["cxPrivacyConsent.v1"] and nothing
+      else — there is no cookie on this site at all
+    · the fonts are local woff2 files, so no request ever leaves for a CDN
+    · the only outbound request happens when someone presses Send, and the
+      exact field list below is the payload script.js builds
+    · hosting is GitHub Pages
+
+  If any of those change, this file has to change with them.
+-->
+<main id="main" class="legal-main">
+  <section class="legal-hero">
+    <div class="container">
+      <div class="legal-hero__eyebrow">Datenschutz</div>
+      <h1 class="legal-hero__title">Datenschutzhinweise.</h1>
+      <p class="legal-hero__lead">Hier steht, welche Daten beim Besuch dieser Website und bei einer Anfrage verarbeitet werden, wer sie erhält und welche Rechte Sie haben.</p>
+    </div>
+  </section>
+
+  <section class="legal-content">
+    <div class="container legal-layout">
+      <nav class="legal-toc" aria-label="Datenschutz Inhalt">
+        <a href="#controller">Verantwortlicher</a>
+        <a href="#hosting">Hosting &amp; Logfiles</a>
+        <a href="#consent">Einwilligung &amp; lokale Speicherung</a>
+        <a href="#tracking">Statistik &amp; Marketing</a>
+        <a href="#fonts">Schriften &amp; externe Inhalte</a>
+        <a href="#form">Kontakt &amp; Anfragen</a>
+        <a href="#recipients">Empfänger</a>
+        <a href="#thirdcountry">Drittländer</a>
+        <a href="#retention">Speicherdauer</a>
+        <a href="#rights">Ihre Rechte</a>
+        <a href="#objection">Widerspruchsrecht</a>
+        <a href="#automated">Keine automatisierten Entscheidungen</a>
+        <a href="#ai">KI-Transparenz</a>
+        <a href="#security">Sicherheit</a>
+        <a href="#changes">Stand</a>
+      </nav>
+
+      <div class="legal-stack">
+
+        <section class="legal-card" id="controller">
+          <h2>1. Verantwortlicher</h2>
+          <p>Verantwortlich für die Datenverarbeitung auf dieser Website im Sinne von Art. 4 Nr. 7 DSGVO ist:</p>
+          <p><strong>CEx UG (haftungsbeschränkt)</strong><br>Stolberger Straße 90 a<br>50825 Köln<br>Deutschland</p>
+          <p>Vertreten durch die Geschäftsführer Johannes Niklas Reusch und Hans-Helmut Scheel.<br>Telefon: <a href="tel:+4917624161674">+49 176 24161674</a><br>E-Mail: <a href="mailto:kontakt@cex.koeln">kontakt@cex.koeln</a></p>
+          <p>Für Fragen zum Datenschutz erreichen Sie uns unter derselben Adresse und unter <a href="mailto:kontakt@cex.koeln">kontakt@cex.koeln</a>. Einen Datenschutzbeauftragten müssen wir nach § 38 BDSG nicht benennen.</p>
+        </section>
+
+        <section class="legal-card" id="hosting">
+          <h2>2. Hosting &amp; Server-Logfiles</h2>
+          <p>Diese Website wird bei <strong>GitHub Pages</strong> gehostet, einem Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA — einem Tochterunternehmen der Microsoft Corporation. GitHub ist für uns Auftragsverarbeiter nach Art. 28 DSGVO.</p>
+          <p>Wenn Sie diese Seite aufrufen, verarbeitet der Server technisch notwendige Verbindungsdaten. Dazu gehören Ihre IP-Adresse, Datum und Uhrzeit des Aufrufs, die angeforderte Datei, die zuvor besuchte Seite, Browser und Betriebssystem. Ohne diese Daten lässt sich eine Website nicht ausliefern.</p>
+          <p>Rechtsgrundlage ist unser berechtigtes Interesse an einem sicheren und stabilen Betrieb nach Art. 6 Abs. 1 lit. f DSGVO. Wir selbst legen keine eigenen Zugriffsprotokolle an und werten keine an. Auf die Speicherdauer der Protokolle bei GitHub haben wir keinen Einfluss; GitHub beschreibt sie in seiner eigenen Datenschutzerklärung unter <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">docs.github.com</a>.</p>
+        </section>
+
+        <section class="legal-card" id="consent">
+          <h2>3. Einwilligung &amp; lokale Speicherung</h2>
+          <p>Beim ersten Besuch öffnet sich ein Fenster mit den Datenschutz-Einstellungen. Darin können Sie die Kategorien Präferenzen, Statistik und Marketing einzeln zulassen oder ablehnen. Ablehnen ist genauso einfach wie Zustimmen, und wenn Sie das Fenster schließen, gilt das als Ablehnung aller optionalen Kategorien.</p>
+          <p><strong>Diese Website setzt keine Cookies.</strong> Gespeichert wird ausschließlich Ihre Auswahl selbst, und zwar im lokalen Speicher Ihres Browsers unter dem Namen <code>cxPrivacyConsent.v1</code>. Diese Angabe verlässt Ihr Gerät nicht. Sie dient allein dazu, dass Sie nicht bei jedem Besuch erneut gefragt werden, und ist damit nach § 25 Abs. 2 Nr. 2 TTDSG unbedingt erforderlich. Sie können sie jederzeit über die Einstellungen Ihres Browsers löschen.</p>
+          <p>Ihre Auswahl können Sie jederzeit mit Wirkung für die Zukunft ändern oder widerrufen:</p>
+          <p><button type="button" class="legal-inline-button" data-privacy-settings>Datenschutz-Einstellungen öffnen</button></p>
+        </section>
+
+        <section class="legal-card" id="tracking">
+          <h2>4. Statistik &amp; Marketing</h2>
+          <p>Auf dieser Website sind <strong>keine</strong> Analyse-, Statistik-, Werbe- oder Retargeting-Dienste eingebunden. Es gibt kein Google Analytics, keine Zählpixel, keine Social-Media-Plugins und kein Profiling zu Werbezwecken. Die Kategorien im Einwilligungsfenster sind vorhanden, damit Sie sehen, worüber Sie entscheiden — geladen wird derzeit in keiner von ihnen etwas.</p>
+        </section>
+
+        <section class="legal-card" id="fonts">
+          <h2>5. Schriften &amp; externe Inhalte</h2>
+          <p>Alle Schriftarten liegen auf demselben Server wie die Website und werden von dort geladen. Es besteht keine Verbindung zu Google Fonts oder einem anderen Schriften-Dienst. Auch die Videos auf dieser Seite liegen auf unserem eigenen Server; es gibt keine YouTube- oder Vimeo-Einbindung.</p>
+          <p>Es ist keine Karte eingebettet. Der Link zur Adresse führt erst nach einem bewussten Klick zu Google Maps — dann gelten die Datenschutzbestimmungen von Google.</p>
+        </section>
+
+        <section class="legal-card" id="form">
+          <h2>6. Kontakt &amp; Anfragen</h2>
+          <p>Wenn Sie das Kontaktformular absenden, werden die von Ihnen eingegebenen Angaben an uns übermittelt. Konkret sind das: <strong>Name, E-Mail-Adresse, Telefonnummer, Unternehmen, Website und Ihre Nachricht</strong>. Technisch mit übertragen werden die Adresse der Seite, von der Sie die Anfrage abgeschickt haben, sowie der Wortlaut der Einwilligungserklärung und der Zeitpunkt Ihrer Zustimmung — beides, damit wir Ihre Einwilligung nach Art. 7 Abs. 1 DSGVO nachweisen können.</p>
+          <p>Pflichtangaben sind nur Name und Telefonnummer; alles andere ist freiwillig. Die Angaben werden ausschließlich verwendet, um Ihre Anfrage zu bearbeiten und Sie zurückzurufen.</p>
+          <p>Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage der Anbahnung eines Vertrags dient, und im Übrigen Art. 6 Abs. 1 lit. a DSGVO auf Grundlage Ihrer Einwilligung, die Sie jederzeit für die Zukunft widerrufen können.</p>
+          <p>Sie können uns stattdessen auch direkt anrufen oder eine E-Mail an <a href="mailto:kontakt@cex.koeln">kontakt@cex.koeln</a> schreiben. Unser E-Mail-Postfach betreibt die 1&amp;1 IONOS SE, Elgendorfer Straße 57, 56410 Montabaur, auf Servern in Deutschland.</p>
+        </section>
+
+        <section class="legal-card" id="recipients">
+          <h2>7. Wer Ihre Daten erhält</h2>
+          <p>Wir geben personenbezogene Daten nicht zum Zweck der Werbung weiter und verkaufen sie nicht. Eingebunden sind ausschließlich die folgenden Dienstleister, jeweils als Auftragsverarbeiter nach Art. 28 DSGVO:</p>
+          <ul>
+            <li><strong>GitHub, Inc.</strong>, San Francisco, USA — Hosting dieser Website.</li>
+            <li><strong>Digital Movement</strong>, London, Vereinigtes Königreich — Betrieb der Schnittstelle, über die das Kontaktformular Ihre Anfrage entgegennimmt und an unser Postfach zustellt (<code>leads.digitalmovement.uk</code>).</li>
+            <li><strong>1&amp;1 IONOS SE</strong>, Montabaur, Deutschland — E-Mail-Postfach und Domain.</li>
+          </ul>
+          <p>Darüber hinaus geben wir Daten nur weiter, wenn wir gesetzlich dazu verpflichtet sind.</p>
+        </section>
+
+        <section class="legal-card" id="thirdcountry">
+          <h2>8. Übermittlung in Drittländer</h2>
+          <p>Der Betrieb dieser Website ist mit Übermittlungen in Länder außerhalb der EU und des EWR verbunden. Wir nennen sie hier vollständig:</p>
+          <ul>
+            <li><strong>USA (GitHub, Inc.).</strong> Beim Aufruf der Seite wird Ihre IP-Adresse an einen Server von GitHub übertragen. Für die USA besteht seit dem 10. Juli 2023 ein Angemessenheitsbeschluss der EU-Kommission (EU-US Data Privacy Framework). Microsoft und GitHub sind unter diesem Rahmen zertifiziert, sodass für diese Übermittlung ein von der EU anerkanntes Schutzniveau gilt.</li>
+            <li><strong>Vereinigtes Königreich (Digital Movement).</strong> Für das Vereinigte Königreich besteht seit dem 28. Juni 2021 ebenfalls ein Angemessenheitsbeschluss der EU-Kommission.</li>
+            <li><strong>Formularanfragen.</strong> Die Server, auf denen die Formular-Schnittstelle betrieben wird, stehen derzeit außerhalb der EU. Für diese Übermittlung gelten die Standardvertragsklauseln der EU-Kommission nach Art. 46 Abs. 2 lit. c DSGVO. Wenn Sie das vermeiden möchten, erreichen Sie uns jederzeit gleichwertig telefonisch unter <a href="tel:+4917624161674">+49 176 24161674</a> oder per E-Mail an <a href="mailto:kontakt@cex.koeln">kontakt@cex.koeln</a> — dieser Weg läuft ausschließlich über Server in Deutschland.</li>
+          </ul>
+        </section>
+
+        <section class="legal-card" id="retention">
+          <h2>9. Speicherdauer</h2>
+          <p>Anfragen löschen wir, sobald sie abschließend bearbeitet sind und keine gesetzliche Aufbewahrungspflicht entgegensteht. Führt eine Anfrage zu einem Vertrag, gelten die handels- und steuerrechtlichen Fristen von sechs beziehungsweise zehn Jahren nach § 257 HGB und § 147 AO.</p>
+          <p>Ihre Auswahl im Einwilligungsfenster bleibt so lange auf Ihrem Gerät, bis Sie sie ändern oder den lokalen Speicher Ihres Browsers löschen.</p>
+        </section>
+
+        <section class="legal-card" id="rights">
+          <h2>10. Ihre Rechte</h2>
+          <p>Sie haben uns gegenüber die folgenden Rechte:</p>
+          <ul>
+            <li><strong>Auskunft</strong> darüber, welche Daten wir über Sie verarbeiten (Art. 15 DSGVO)</li>
+            <li><strong>Berichtigung</strong> unrichtiger Daten (Art. 16 DSGVO)</li>
+            <li><strong>Löschung</strong> (Art. 17 DSGVO)</li>
+            <li><strong>Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO)</li>
+            <li><strong>Datenübertragbarkeit</strong> (Art. 20 DSGVO)</li>
+            <li><strong>Widerruf einer Einwilligung</strong> jederzeit mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO)</li>
+          </ul>
+          <p>Eine formlose Nachricht an <a href="mailto:kontakt@cex.koeln">kontakt@cex.koeln</a> genügt.</p>
+          <p>Außerdem können Sie sich bei einer Aufsichtsbehörde beschweren (Art. 77 DSGVO). Für uns zuständig ist:</p>
+          <p>Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen<br>Kavalleriestraße 2–4<br>40213 Düsseldorf<br>Telefon: <a href="tel:+49211384240">+49 211 38424-0</a><br>E-Mail: <a href="mailto:poststelle@ldi.nrw.de">poststelle@ldi.nrw.de</a></p>
+        </section>
+
+        <section class="legal-card legal-card--highlight" id="objection">
+          <h2>11. Widerspruchsrecht nach Art. 21 DSGVO</h2>
+          <p><strong>Sie haben das Recht, jederzeit gegen die Verarbeitung Ihrer personenbezogenen Daten Widerspruch einzulegen, soweit diese auf Grundlage eines berechtigten Interesses nach Art. 6 Abs. 1 lit. f DSGVO erfolgt. Das gilt auch für ein darauf gestütztes Profiling.</strong></p>
+          <p><strong>Legen Sie Widerspruch ein, verarbeiten wir Ihre Daten nicht mehr, es sei denn, wir können zwingende schutzwürdige Gründe nachweisen, die Ihre Interessen, Rechte und Freiheiten überwiegen, oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.</strong></p>
+          <p><strong>Werden Ihre Daten für Direktwerbung verarbeitet, können Sie dem jederzeit ohne Angabe von Gründen widersprechen; danach verwenden wir sie dafür nicht mehr.</strong></p>
+          <p>Ihr Widerspruch ist an keine Form gebunden. Eine E-Mail an <a href="mailto:kontakt@cex.koeln">kontakt@cex.koeln</a> reicht aus.</p>
+        </section>
+
+        <section class="legal-card" id="automated">
+          <h2>12. Keine automatisierten Entscheidungen</h2>
+          <p>Wir setzen keine automatisierte Entscheidungsfindung und kein Profiling im Sinne von Art. 22 DSGVO ein. Über Ihre Anfrage entscheidet immer ein Mensch.</p>
+        </section>
+
+        <section class="legal-card" id="ai">
+          <h2>13. KI-Transparenz nach der EU-KI-Verordnung</h2>
+          <p>Die Verordnung (EU) 2024/1689 über künstliche Intelligenz — die KI-Verordnung, häufig EU AI Act genannt — verlangt seit dem 2. August 2026, dass bestimmte Einsätze von KI offengelegt werden. Wir legen hier freiwillig vollständig offen, wie es sich auf dieser Website verhält.</p>
+          <p><strong>Auf dieser Website läuft kein KI-System.</strong> Es gibt keinen Chatbot und keinen Assistenten, mit dem Sie sprechen könnten. Es gibt keine automatisierte Entscheidung über Ihre Anfrage, keine Emotionserkennung, keine biometrische Kategorisierung, keine Gesichtserkennung und kein Profiling. Die Informationspflicht aus Art. 50 Abs. 1 KI-VO — der Hinweis, dass Sie mit einer Maschine sprechen — kann hier deshalb gar nicht entstehen.</p>
+          <p><strong>Die Filme und Fotos auf dieser Seite sind echte Aufnahmen.</strong> Der Film im Kopfbereich ist eine reale Luftaufnahme von Köln mit Dom und Hohenzollernbrücke. Die sechs kurzen Filme bei den Leistungen sind lizenziertes Filmmaterial mit realen Menschen. Die Fotos der Ansprechpartner zeigen die beiden Geschäftsführer. Nichts davon ist mit KI erzeugt oder mit KI verändert. Auf dieser Website gibt es deshalb keine Deepfakes im Sinne von Art. 50 Abs. 4 KI-VO.</p>
+          <p><strong>Bei den Texten haben wir KI eingesetzt.</strong> Teile der Texte auf dieser Website sind mit Unterstützung generativer KI entstanden. Jeder Satz wurde anschließend von Menschen geprüft, überarbeitet und freigegeben; die redaktionelle Verantwortung nach Art. 50 Abs. 4 KI-VO tragen die im <a href="impressum.html">Impressum</a> genannten Personen. Eine Offenlegungspflicht besteht dafür nicht, weil es sich nicht um Texte zu Fragen von öffentlichem Interesse handelt und die Inhalte menschlich geprüft sind. Wir nennen es trotzdem, weil wir Kunden zu genau diesem Thema beraten.</p>
+          <p><strong>Verbotene Praktiken schließen wir aus.</strong> Wir setzen keine der nach Art. 5 KI-VO verbotenen Techniken ein — weder unterschwellige oder manipulative Beeinflussung noch das Ausnutzen von Schutzbedürftigkeit, Social Scoring oder das ungezielte Auslesen von Gesichtsbildern.</p>
+          <p><strong>KI-Kompetenz im Unternehmen.</strong> CEx berät selbst zu KI. Nach Art. 4 KI-VO sorgen wir dafür, dass die Personen, die bei uns mit KI-Systemen arbeiten, über ausreichende KI-Kompetenz verfügen.</p>
+          <p>Fragen dazu beantworten wir gern unter <a href="mailto:kontakt@cex.koeln">kontakt@cex.koeln</a>.</p>
+        </section>
+
+        <section class="legal-card" id="security">
+          <h2>14. Sicherheit</h2>
+          <p>Diese Website wird ausschließlich verschlüsselt übertragen (TLS). Sie erkennen das am <code>https://</code> in der Adresszeile und am Schloss-Symbol Ihres Browsers. Darüber hinaus treffen wir angemessene technische und organisatorische Maßnahmen, um Ihre Daten gegen Verlust, Veränderung und unberechtigten Zugriff zu schützen.</p>
+        </section>
+
+        <section class="legal-card" id="changes">
+          <h2>15. Stand und Änderungen</h2>
+          <p>Wir aktualisieren diese Hinweise, sobald sich die Website, die eingesetzten Dienste oder die rechtlichen Anforderungen ändern.</p>
+          <p><strong>Stand: 11. August 2026.</strong></p>
+        </section>
+
+      </div>
+    </div>
+  </section>
+</main>

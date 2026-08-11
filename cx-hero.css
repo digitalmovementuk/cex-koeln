@@ -1,0 +1,763 @@
+/* ==========================================================================
+   CEx — THE HERO
+   --------------------------------------------------------------------------
+   One hero, every page. This file is the only place hero geometry, type,
+   media and form are declared; it loads last on every template so nothing
+   else can quietly win.
+
+   The rules were spread across four stylesheets before this — styles.css owned
+   the homepage hero, cx-template.css and polish.css owned a second, different
+   hero for the 32 service pages, and hub-quality.css nudged both. That is why
+   no two heroes on this site looked alike. The service-page variants are gone;
+   what is left is the variant-2 study, verbatim.
+
+   What every hero holds:
+     - the same video plate, lit by --hero-img-filter, under --hero-overlay
+     - the same white contact card, two form columns wide
+     - the same copy stack: eyebrow, H1, lead, two CTAs
+
+   What a page may change: the words. Eyebrow, H1, lead and CTA labels are
+   page-specific. Nothing else is.
+
+   Height is deliberate: min-height 66vh, so the hero takes the top two thirds
+   of the viewport and the band beneath it always shows above the fold. That
+   budget is what forces the compact two-column form below — a stacked
+   seven-row form does not fit in two thirds of a screen, and the old hero
+   grew to fill the whole one rather than admit it.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  /* The hero owns the top two thirds of the viewport and no more, so the band
+     below it always peeks above the fold and gives a reason to scroll. The
+     560px floor keeps it usable on short laptop screens. Every page inherits
+     this — there is one hero geometry on this site. */
+  min-height: 66vh;
+  background: var(--acn-black);
+  color: #fff;
+  overflow: hidden;
+  isolation: isolate;
+  padding-top: clamp(120px, 14vh, 168px);
+  padding-bottom: clamp(96px, 12vh, 140px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hero__video-shell {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.05);
+  filter: var(--hero-img-filter);
+  /* Full opacity, as in the variant-2 study. The filter alone does the
+     lightening; dropping the film to .68 over a charcoal plate was what made
+     the footage read grey and washed instead of bright daylight. */
+  opacity: 1;
+}
+.hero__video-overlay {
+  position: absolute;
+  inset: 0;
+  /* The scrim, and nothing else. An orange radial tint used to sit on top of
+     it; over the charcoal it composited to a brown cast the study does not
+     have. Value lives in cx-design-system.css. */
+  background: var(--hero-overlay);
+  pointer-events: none;
+}
+.hero__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.9fr);
+  gap: clamp(48px, 6vw, 112px);
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: 0 var(--container-px);
+  align-items: center;
+}
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 3.5vw, 44px);
+  max-width: 760px;
+}
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  width: fit-content;
+}
+.hero__eyebrow-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--acn-purple);
+  border-radius:0;
+  box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.18);
+  animation: pulseDot 2.4s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.18); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 122, 0, 0.05); }
+}
+.hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4.7vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1.03;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.hero__title-line {
+  display: block;
+}
+.hero__title-line--accent {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+  flex-wrap: wrap;
+}
+.hero__title-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(40px, 7vw, 84px);
+  height: clamp(40px, 7vw, 84px);
+  color: var(--acn-purple);
+  flex-shrink: 0;
+}
+.hero__title-glyph svg { width: 100%; height: 100%; }
+@media (min-width: 769px) {
+.hero__title-text--right { white-space: nowrap; }
+}
+.hero__lead-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  max-width: 640px;
+}
+.hero__lead-bar {
+  display: block;
+  width: 42px;
+  height: 5px;
+  background: var(--acn-purple);
+  flex-shrink: 0;
+  margin-top: 14px;
+}
+.hero__lead {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.005em;
+}
+.hero__shapes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.hero__shape {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #fff;
+  padding: 6px 0;
+  width: fit-content;
+}
+.hero__cta-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--cx-yellow);
+  color: var(--cx-charcoal);
+  transition: background-color var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+}
+.hero__cta-icon svg { width: 16px; height: 16px; }
+.hero__cta:hover .hero__cta-icon { background: var(--cx-surface); transform: translateX(4px); }
+.hero__form-wrap {
+  display: flex;
+  align-items: stretch;
+}
+.hero__card {
+  width: 100%;
+  /* White, per the study. --cx-warm-2 is the card fill for cards sitting ON
+     the light surface; this one sits on a photograph and needs to read as
+     paper laid over it. */
+  background: var(--form-bg);
+  color: var(--acn-ink);
+  padding: clamp(24px, 2.4vw, 34px) clamp(24px, 2.6vw, 38px);
+  border: none;
+  position: relative;
+  align-self: center;
+  box-shadow: 0 40px 96px -28px rgba(0, 0, 0, 0.6);
+}
+.hero__card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--acn-purple);
+}
+.form__kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--acn-ink);
+  margin-bottom: 8px;
+}
+.form__kicker-bar {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: var(--acn-purple);
+}
+.form__sub {
+  margin: 0 0 14px;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.form { display: flex; flex-direction: column; gap: 12px; }
+.form__label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--acn-ink-2);
+}
+.form__input,
+.form__textarea {
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  padding: 11px 13px;
+  background: var(--cx-surface);
+  border: 1px solid var(--line);
+  color: var(--acn-ink);
+  width: 100%;
+  border-radius:0;
+  transition: border-color var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
+}
+.form__textarea { min-height: 64px; resize: vertical; }
+.form__input::placeholder,
+.form__textarea::placeholder { color: var(--acn-gray-2); }
+.form__input:focus,
+.form__textarea:focus {
+  outline: none;
+  border-color: var(--acn-purple);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.15);
+}
+.form__consent {
+  display: flex;
+  gap: 10px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.form__checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--acn-purple);
+}
+.form__consent a {
+  color: var(--acn-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--acn-purple);
+  text-underline-offset: 3px;
+}
+.form__privacy {
+  margin: 0;
+  font-size: 0.71875rem;
+  line-height: 1.5;
+  color: var(--acn-gray-2);
+}
+.form__optional {
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: var(--acn-gray-1);
+  margin-left: 4px;
+}
+.form__submit {
+  margin-top: 4px;
+  width: 100%;
+  justify-content: center;
+}
+.form__status {
+  margin: 0;
+  min-height: 1.2em;
+  font-size: 0.8125rem;
+  color: var(--acn-purple-2);
+}
+@media (min-width: 981px) {
+.hero {
+    padding-top: 96px;
+    padding-bottom: 34px;
+  }.hero__grid {
+    gap: clamp(40px, 5vw, 76px);
+  }.hero__copy {
+    gap: 26px;
+  }.hero__title {
+    font-size: clamp(2.4rem, 4.15vw, 3.55rem);
+    line-height: 1.02;
+  }.hero__title-glyph {
+    width: clamp(38px, 5.4vw, 62px);
+    height: clamp(38px, 5.4vw, 62px);
+  }.hero__lead {
+    font-size: 1rem;
+    line-height: 1.45;
+  }.hero__lead-wrap {
+    max-width: 600px;
+  }.hero__card {
+    padding: 20px 26px;
+  }.hero__card .form__privacy {
+    display: none;
+  }.hero__card .cex-honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }.hero__card .form__status:empty {
+    display: none;
+  }.hero__card .form__sub {
+    margin-bottom: 10px;
+    font-size: 0.8125rem;
+  }.hero__card .form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 8px 14px;
+  }.hero__card .form__label {
+    gap: 5px;
+    font-size: 0.75rem;
+  }.hero__card .form__label:nth-of-type(1) { grid-area: 1 / 1; }.hero__card .form__label:nth-of-type(3) { grid-area: 1 / 2; }.hero__card .form__label:nth-of-type(2) { grid-area: 2 / 1 / auto / -1; }.hero__card .form__label:nth-of-type(4) { grid-area: 3 / 1 / auto / -1; }.hero__card .form__consent,
+  .hero__card .form__privacy,
+  .hero__card .form__submit,
+  .hero__card .form__status {
+    grid-column: 1 / -1;
+  }.hero__card .form__input,
+  .hero__card .form__textarea {
+    padding: 9px 11px;
+    font-size: 0.875rem;
+  }.hero__card .form__textarea {
+    min-height: 40px;
+  }.hero__card .form__consent {
+    gap: 8px;
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }.hero__card .form__submit {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+}
+@media (min-width: 981px) and (max-height: 800px) {
+.hero__copy,
+  .hero__form-wrap,
+  .hero__lead-wrap,
+  .hero__lead-bar,
+  .hero__cta,
+  .hero__title-text,
+  .hero__title-glyph {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+.hero__scroll-cue {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.6);
+}
+.hero__scroll-cue-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.hero__scroll-cue-line {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, transparent, var(--acn-purple) 40%, var(--acn-purple));
+  position: relative;
+  overflow: hidden;
+}
+@media (max-width: 980px) {
+.hero { min-height: auto; padding-top: 92px; padding-bottom: 56px; }.hero__grid { grid-template-columns: 1fr; gap: 40px; }.hero__scroll-cue { display: none; }.hero__copy,
+  .hero__form-wrap,
+  .hero__lead-wrap,
+  .hero__lead-bar,
+  .hero__cta,
+  .hero__title-text,
+  .hero__title-glyph {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+@keyframes acn-hero-bg-fade {
+  /* Lands on 1, matching .hero__video. It used to end at .55 while the rule
+     said .68, so the film popped a step brighter the moment the fade ended. */
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes acn-hero-overlay-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes acn-hero-headline-base {
+  0%   { opacity: 0; transform: translateY(20%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes acn-hero-body {
+  0%   { opacity: 0; transform: translateY(20%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.hero__video {
+  animation: acn-hero-bg-fade 1550ms var(--acn-ease-hero-1) var(--acn-delay-1) backwards;
+}
+.hero__video-overlay {
+  animation: acn-hero-overlay-fade 1550ms var(--acn-ease-hero-1) var(--acn-delay-1) backwards;
+}
+.hero__eyebrow {
+  animation: acn-deco-fade-in 1100ms var(--acn-ease) var(--acn-delay-1) backwards;
+}
+.hero__eyebrow-dot {
+  animation:
+    acn-pulse-purple 2.4s ease-in-out infinite,
+    acn-deco-fade-in 1100ms var(--acn-ease) var(--acn-delay-1) backwards;
+}
+.hero__title {
+  animation: acn-hero-headline-base 750ms var(--acn-ease-hero-2) var(--acn-delay-1) backwards;
+  /* parent .hero already has overflow:hidden, so no clipping needed here */
+}
+.hero__title-line {
+  display: block;
+  padding-bottom: 0.04em; /* prevent descender clip */
+}
+.hero__title-text {
+  display: inline-block;
+  will-change: transform;
+}
+.hero__title-text--left {
+  animation: acn-headline-text-left 750ms var(--acn-ease-hero-2) var(--acn-delay-2) backwards;
+}
+.hero__title-text--right {
+  animation: acn-headline-text-right 750ms var(--acn-ease-hero-2) var(--acn-delay-2) backwards;
+}
+.hero__title-glyph {
+  display: inline-flex;
+  transform-origin: 50% 50%;
+  animation: acn-headline-V 750ms var(--acn-ease-hero-2) calc(var(--acn-delay-2) * 2) backwards;
+}
+.hero__lead-wrap {
+  animation: acn-hero-body 1250ms var(--acn-ease-hero-2) var(--acn-delay-2) backwards;
+}
+.hero__lead-bar {
+  animation: acn-deco-line-in 1250ms var(--acn-ease) calc(var(--acn-delay-2) + 200ms) backwards;
+}
+.hero__shapes {
+  animation: acn-hero-body 1250ms var(--acn-ease-hero-2) calc(var(--acn-delay-2) + 200ms) backwards;
+}
+.hero__cta {
+  animation: acn-hero-body 1250ms var(--acn-ease-hero-2) calc(var(--acn-delay-2) + 350ms) backwards;
+}
+.hero__form-wrap {
+  animation: acn-content-reveal 900ms var(--acn-ease) calc(var(--acn-delay-2) + 100ms) backwards;
+}
+.hero__scroll-cue {
+  animation: acn-deco-fade-in 1100ms var(--acn-ease) calc(var(--acn-delay-2) + 600ms) backwards;
+}
+.hero__scroll-cue-line {
+  position: relative;
+  overflow: hidden;
+}
+.hero__scroll-cue-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--acn-purple);
+  animation: acn-scroll-cue 1.8s var(--acn-ease) infinite;
+}
+.btn:hover .btn__icon,
+.link-arrow:hover .link-arrow__icon,
+.hero__cta:hover .hero__cta-icon {
+  animation: acn-arrow-bounce 550ms var(--acn-ease);
+}
+@media (prefers-reduced-motion: reduce) {
+.nav,
+  .hero__video,
+  .hero__video-overlay,
+  .hero__eyebrow,
+  .hero__eyebrow-dot,
+  .hero__title,
+  .hero__title-text--left,
+  .hero__title-text--right,
+  .hero__title-glyph,
+  .hero__lead-wrap,
+  .hero__lead-bar,
+  .hero__shapes,
+  .hero__cta,
+  .hero__form-wrap,
+  .hero__scroll-cue,
+  .hero__scroll-cue-line::after,
+  .final-cta__inner.is-visible .final-cta__headline-glyph,
+  .outcomes__tab.is-active::after {
+    animation: none !important;
+  }.hero__video { opacity: 1; }.hero__video-overlay { opacity: 1; }.hero__title-glyph { transform: rotate(0deg) scale(0.95); }
+}
+.hero {
+  view-timeline-name: --hero-scroll;
+  view-timeline-axis: block;
+}
+@supports (animation-timeline: scroll()) {
+.hero__video-shell,
+  .hero__copy,
+  .hero__form-wrap {
+    animation-timeline: scroll(root block);
+    animation-range: 0 66vh;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }.hero__video-shell { animation-name: acn-parallax-scale; }.hero__copy        { animation-name: acn-hero-copy-out; }.hero__form-wrap   { animation-name: acn-hero-form-out; }
+}
+@keyframes acn-parallax-scale {
+  0%   { transform: scale(1)    translateY(0);   }
+  100% { transform: scale(1.12) translateY(-8%); }
+}
+@keyframes acn-hero-copy-out {
+  0%   { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0.05; transform: translateY(-60px); }
+}
+@keyframes acn-hero-form-out {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0.1; transform: translateY(-40px) scale(0.96); }
+}
+@media (max-width: 768px) {
+.hero__copy { align-items: center; text-align: center; max-width: 100%; }.hero__eyebrow { justify-content: center; }.hero__title { text-align: center; }.hero__title-line--accent { justify-content: center; }.hero__lead-wrap { flex-direction: column; align-items: center; text-align: center; gap: 16px; }.hero__lead-bar { margin-top: 0; }.hero__lead { text-align: center; }.hero__shapes { justify-content: center; }.hero__cta { margin-inline: auto; }.hero__card { text-align: left; }.form__kicker { justify-content: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+.hero__video-shell,
+  .hero__copy,
+  .hero__form-wrap,
+  .cap-card,
+  .cap-card__video,
+  .h-section,
+  .h-lead,
+  .journey-step,
+  .benefit,
+  .faq-item,
+  .final-cta__headline-glyph,
+  .final-cta__headline,
+  .outcomes__panel-inner,
+  .footer__brand-wrap,
+  .footer__col,
+  .trustband__inner.has-marquee .trustband__items,
+  .motion-pending {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+@media (max-width: 768px) {
+.form__input,
+  .form__textarea { font-size: 1rem; padding: 13px 14px; }.form__submit { min-height: 48px; }
+}
+@media (max-width: 820px) {
+h1,
+  h2,
+  h3,
+  .h-section,
+  .cx-proof__h,
+  .hero__title,
+  .section__head {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    hyphens: auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   H1 length
+   The homepage headline is three words. A service-page headline carries the
+   page's search term and runs two to three times longer — set in the same
+   uppercase display face at the same size it would break out of its column.
+   Same type, same case, same weight; the scale steps down as the string grows.
+   The class is stamped at build time from the character count, so a copy edit
+   that lengthens a headline needs the class checked with it.
+   -------------------------------------------------------------------------- */
+@media (min-width: 981px) {
+  .hero__title--long  { font-size: clamp(1.9rem, 3.1vw, 2.7rem); }
+  .hero__title--xlong { font-size: clamp(1.6rem, 2.5vw, 2.15rem); }
+}
+@media (max-width: 980px) {
+  .hero__title--long  { font-size: clamp(1.75rem, 5.6vw, 2.4rem); }
+  .hero__title--xlong { font-size: clamp(1.55rem, 4.8vw, 2rem); }
+}
+
+/* --------------------------------------------------------------------------
+   Pieces the hero used to borrow from other stylesheets
+   The homepage looked right only because styles.css and polish.css happened to
+   be loaded behind it. Service pages load neither, so the same markup came out
+   with a flat CTA row and an orange submit where the homepage has a charcoal
+   one. Everything the hero depends on is declared here now.
+   -------------------------------------------------------------------------- */
+
+/* The arrow and the words after it are one line, always. `nowrap` on the
+   right-hand text meant a long headline could not break inside itself, so the
+   flex line wrapped instead — dropping the arrow onto a line of its own with
+   the text stranded beneath it. Let the text wrap; keep the arrow beside it. */
+.hero__title-line--accent {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.hero__title-text--right {
+  white-space: normal;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.hero__title-text {
+  min-width: 0;
+}
+
+/* Two CTAs, one of them primary. Without this both read as the same quiet
+   text-and-arrow link and the enquiry stops being the obvious next move. */
+.hero__cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.hero__cta-group .hero__cta {
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 0;
+}
+.hero__cta-group .hero__cta--primary {
+  color: var(--cx-charcoal);
+  background: var(--cx-accent);
+  border-color: var(--cx-accent);
+  font-weight: 700;
+}
+.hero__cta-group .hero__cta--primary .hero__cta-icon {
+  color: #fff;
+  background: var(--cx-charcoal);
+}
+
+/* The card's submit. Charcoal, with the accent reserved for the arrow chip —
+   the orange is already spent on the primary CTA to its left, and two orange
+   blocks in one hero cancel each other out. */
+.hero__card .form__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--cx-charcoal);
+  color: var(--cx-surface);
+  border: 1px solid var(--cx-charcoal);
+  border-radius: 0;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: background-color var(--dur, 220ms) ease, color var(--dur, 220ms) ease;
+}
+.hero__card .form__submit:hover {
+  background: var(--cx-charcoal-2);
+  border-color: var(--cx-charcoal-2);
+  color: var(--cx-surface);
+}
+.hero__card .form__submit .btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--cx-accent);
+  color: var(--cx-accent-on);
+  flex-shrink: 0;
+}
+.hero__card .form__submit .btn__icon svg { width: 12px; height: 12px; }
+
+@media (max-width: 980px) {
+  .hero__cta-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero__cta-group .hero__cta {
+    width: min(100%, 320px);
+    justify-content: center;
+    margin-inline: auto;
+  }
+}
+
+/* The accent line is a flex row of arrow + words. Left to itself it takes the
+   full column width, so when mobile centres the headline the words centre
+   inside that full-width box and the arrow is left stranded at the far edge.
+   Shrink the row to its contents and centre the row — arrow and words travel
+   together. */
+.hero__title-line--accent {
+  width: fit-content;
+  max-width: 100%;
+}
+@media (max-width: 980px) {
+  .hero__title-line--accent { margin-inline: auto; }
+}

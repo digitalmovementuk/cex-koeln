@@ -1,0 +1,220 @@
+/* ============================================================================
+   "Wer wir sind" — die kanonische Gruendersektion (.cx-trust)
+   ----------------------------------------------------------------------------
+   Diese Datei ist die EINZIGE Quelle fuer das Aussehen dieser Sektion. Sie liegt
+   auf jeder Seite als LETZTES Stylesheet im <head>, damit sie auch bei gleicher
+   Spezifitaet gewinnt. Die Sektion sieht auf der Startseite und auf allen 32
+   Unterseiten identisch aus — bitte nirgends seitenlokal nachjustieren.
+
+   Zwei Dinge haben die Sektion in der Vergangenheit auseinanderlaufen lassen,
+   beide sind hier strukturell abgestellt:
+
+   1) SEITENLOKALE TOKENS. Die Sektion hat frueher `--section-py` benutzt. Change
+      Management setzt diesen Token seitenweit auf clamp(80px,8vw,120px), also
+      115.2px statt 112px bei 1440px — die Sektion war dort 6px hoeher als
+      ueberall sonst. Deshalb hat sie jetzt mit `--cx-trust-py` einen eigenen
+      Token, den keine Seite ueberschreibt.
+
+   2) FLAECHENDECKENDE SEITENREGELN. Prozessoptimierung setzt inline
+      `body.cex-migrated-page .h-section{line-height:1.2!important}` — das traf
+      auch die Ueberschrift hier, weil sie `.h-section` traegt. (0,2,1) schlaegt
+      (0,2,0), auch mit !important auf beiden Seiten. Die Ueberschrift stand
+      dadurch 19px hoeher und der ganze Block war verschoben. Alle Regeln, die
+      auf generische Klassen wie .h-section oder .h-lead treffen koennen, sind
+      deshalb ueber `.cx-trust .cx-trust__col X` auf (0,3,0) gehoben.
+
+   Wer hier etwas aendert, aendert es auf 33 Seiten. Das ist Absicht.
+   ========================================================================== */
+
+.cx-trust {
+  /* Eigener Abstands-Token: seitenlokale --section-py-Werte kommen nicht heran.
+     Der Wert ist exakt der, den die Sektion vorher global hatte (polish.css:43),
+     nur eben unantastbar: 112px bei 1440px, 96px bei 1200px, 64px ab 920px
+     abwaerts (siehe Media Query am Dateiende). */
+  --cx-trust-py: clamp(88px, 8vw, 112px);
+  padding: var(--cx-trust-py) 0 !important;
+  background: var(--cx-surface, var(--cx-surface)) !important;
+  color: var(--cx-charcoal) !important;
+}
+
+.cx-trust .cx-trust__col:first-child .eyebrow {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  width: fit-content !important;
+  margin: 0 0 24px !important;
+  color: var(--cx-charcoal) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  line-height: 1.55 !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+}
+
+.cx-trust .cx-trust__col:first-child .eyebrow::before,
+.cx-trust .cx-trust__col:first-child .eyebrow::after {
+  display: none !important;
+  content: none !important;
+}
+
+.cx-trust .cx-trust__grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: clamp(36px, 5vw, 64px) !important;
+  align-items: start !important;
+}
+
+.cx-trust .cx-trust__col .cx-trust__heading {
+  margin: 0 !important;
+  max-width: 18ch !important;
+  color: var(--cx-charcoal) !important;
+  font-family: Inter, "Inter Fallback", system-ui, sans-serif !important;
+  /* Der Wert kam bisher aus polish.css:62 — founders.css stand zu weit vorne im
+     <head> und verlor. Jetzt steht er hier, wo er hingehoert, mit genau dem
+     gleichen Ergebnis: 52px bei 1440px, 43.8px bei 1200px. */
+  font-size: clamp(2.25rem, 3.65vw, 3.25rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.03em !important;
+  text-wrap: balance;
+  overflow-wrap: break-word !important;
+  hyphens: auto !important;
+}
+
+.cx-trust .cx-trust__col:first-child > .h-lead {
+  max-width: 42ch !important;
+  margin: clamp(20px, 2vw, 28px) 0 0 !important;
+  color: var(--muted) !important;
+  font-size: clamp(1.0625rem, 1.3vw, 1.25rem) !important;
+  line-height: 1.55 !important;
+  letter-spacing: -0.005em !important;
+}
+
+.cx-trust .cx-trust__col .cx-trust__founders {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 176px)) !important;
+  gap: 24px !important;
+  margin: 26px 0 22px !important;
+  align-items: start !important;
+}
+
+.cx-trust .cx-trust__col .cx-trust__founders figure {
+  margin: 0 !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  text-align: center !important;
+}
+
+.cx-trust .cx-trust__col .cx-trust__founders img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 4 / 5 !important;
+  object-fit: cover !important;
+  object-position: center 18% !important;
+  margin: 0 auto 10px !important;
+  border-radius: 0 !important;
+}
+
+/* Two lines' worth of space whether the name needs them or not. "Hans-Helmut
+   "Hannes" Scheel" wraps and "Johannes Reusch" does not, so without this the
+   two "Gründer" labels sat 20px out of line with each other. */
+.cx-trust .cx-trust__col .cx-trust__founders b {
+  display: block !important;
+  min-height: 2.5em !important;
+  font-size: 1.02rem !important;
+  line-height: 1.25 !important;
+  color: var(--cx-charcoal) !important;
+}
+
+.cx-trust .cx-trust__col .cx-trust__founders span {
+  display: block !important;
+  margin-top: 3px !important;
+  font-size: 0.84rem !important;
+  line-height: 1.35 !important;
+  color: var(--muted) !important;
+  opacity: 1 !important;
+}
+
+/* Creds: never a 2+1 orphan row — always one full-width stack. */
+.cx-trust .cx-trust__col .cx-trust__creds {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 2px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  justify-items: start !important;
+  list-style: none !important;
+}
+
+.cx-trust .cx-trust__col .cx-trust__creds li {
+  padding: 8px 0 !important;
+  color: var(--cx-charcoal-2) !important;
+  font-size: 0.9375rem !important;
+  line-height: 1.6 !important;
+}
+
+.cx-trust .cx-trust__col .cx-trust__creds b {
+  display: block !important;
+  color: var(--cx-charcoal) !important;
+  font-weight: 800 !important;
+  font-size: 1.125rem !important;
+  line-height: 1.25 !important;
+}
+
+@media (min-width: 880px) {
+  .cx-trust .cx-trust__grid {
+    grid-template-columns: 1.05fr 0.95fr !important;
+  }
+}
+
+/* Ab hier schmaler: gleiche Schwelle und gleiche Werte wie bisher global in
+   polish.css:400ff. Steht jetzt hier, damit die Sektion ihre Groessen nirgendwo
+   sonst herholt. */
+@media (max-width: 920px) {
+  .cx-trust {
+    --cx-trust-py: 64px;
+  }
+
+  .cx-trust .cx-trust__col .cx-trust__heading {
+    font-size: clamp(1.875rem, 8vw, 2.25rem) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .cx-trust .cx-trust__col:first-child,
+  .cx-trust .cx-trust__col .cx-trust__heading,
+  .cx-trust .cx-trust__col .cx-trust__lead,
+  .cx-trust .cx-trust__col .h-lead {
+    margin-inline: auto !important;
+    text-align: center !important;
+  }
+
+  .cx-trust .cx-trust__col:first-child .eyebrow,
+  .cx-trust .cx-trust__col:first-child .cx-trust__eyebrow {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .cx-trust .cx-trust__col .cx-trust__creds {
+    grid-template-columns: 1fr !important;
+    justify-items: center !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .cx-trust .cx-trust__col .cx-trust__founders {
+    grid-template-columns: repeat(2, minmax(0, 156px)) !important;
+    gap: 14px !important;
+    justify-content: center !important;
+    margin-inline: auto !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .cx-trust .cx-trust__col .cx-trust__founders {
+    grid-template-columns: repeat(2, minmax(0, 140px)) !important;
+  }
+}

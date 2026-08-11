@@ -1,0 +1,902 @@
+/* ==========================================================================
+   cx-components.css — the components that must look the same on every page
+
+   Anything that appears on more than one page and kept drifting between the
+   homepage and the 32 service pages lives here, declared once. It loads LAST
+   on all 36 public pages, so it is the last word on these three things:
+
+     1. FAQ            — one question style AND one heading wording, everywhere
+     2. Card grids     — the last row fills the width; no orphan gaps
+     3. Long words     — German compounds break instead of escaping their column
+
+   Wording that must be identical on every page is listed in INHALTS-STANDARDS.md
+   next to this file. CSS cannot enforce a sentence, so the standard lives there
+   and is cross-referenced from the component it belongs to.
+
+   The reason the site had two of everything: styles.css only reaches the
+   homepage and the legal pages, cx-template.css only reaches the service
+   pages, so the same component was written twice and then edited once. Adding
+   a rule to either of those files fixes half the site. Add it here instead.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. FAQ — the homepage list is the blueprint
+   --------------------------------------------------------------------------
+   Two FAQ components existed. The homepage (.faq-item / .faq-icon /
+   .faq-item__body, in styles.css) is a flat list: hairline rules, no boxes, a
+   square accent chip that turns from + to − when the answer opens. The service
+   pages (.faq__item / .faq__answer, in cx-template.css) were bordered cards in
+   two columns with a plain "+" character.
+
+   The service markup has no element for the chip, so it is drawn here on
+   summary::after — a coloured box with the two bars painted as background
+   layers. Open state drops the vertical bar and inverts, which is the same
+   plus-to-minus flip the homepage does by hiding .faq-icon__bar--v.
+
+   DIE UEBERSCHRIFT IST FESTGELEGT. Das H2 in <section id="faq"> lautet auf
+   allen 33 Seiten wortgleich:
+
+       Diese Fragen hören wir häufiger
+
+   Vorher standen dort 30 verschiedene Formulierungen ("Fragen, die in den
+   ersten Gesprächen immer kommen.", "Häufige Fragen zur …", "Fragen aus
+   Produktion, Qualität und Instandhaltung." …). Der Abschnitt ist auf jeder
+   Seite derselbe Baustein und liest sich nur dann als einer, wenn er auch
+   gleich heisst. Neue Seiten uebernehmen den Satz unveraendert — die
+   Seitenspezifik gehoert in die Fragen, nicht in die Ueberschrift.
+   Quelle: INHALTS-STANDARDS.md
+   ========================================================================== */
+
+.faq {
+  /* min() so the mobile rules that force this to 100% still get their way. */
+  max-width: min(920px, 100%);
+  /* Flush left by default: service pages set their section heads left, and a
+     centred 920px list under a left-aligned heading reads as a mistake. */
+  margin: 56px 0 0;
+  display: block;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+/* The homepage centres its FAQ heading, so the list follows it. */
+#faq:has(.section__intro--center) .faq,
+#faq:has(.h-section--center) .faq { margin-inline: auto; }
+
+.faq__item {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  transition: background-color var(--dur) var(--ease-out);
+}
+.faq__item[open] { background: var(--cx-warm-2); border-color: var(--line); }
+
+.faq__item summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: clamp(24px, 2.4vw, 32px) clamp(16px, 1.6vw, 24px);
+  font-family: var(--font-display);
+  font-size: clamp(1.0625rem, 1.2vw, 1.1875rem);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  color: var(--acn-ink);
+  cursor: pointer;
+  transition: padding-left var(--dur) var(--ease-out);
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary:hover { padding-left: 24px; }
+
+/* The chip. 28px square, accent fill, a 12px plus drawn from two background
+   layers so no extra markup is needed. */
+.faq__item summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background-color: var(--cx-yellow);
+  background-image:
+    linear-gradient(var(--cx-charcoal), var(--cx-charcoal)),
+    linear-gradient(var(--cx-charcoal), var(--cx-charcoal));
+  background-size: 12px 1.5px, 1.5px 12px;
+  background-position: center center, center center;
+  background-repeat: no-repeat;
+  transition:
+    background-color var(--dur) var(--ease-out),
+    transform var(--dur) var(--ease-out);
+}
+/* Open: only the horizontal bar survives, so the plus reads as a minus. */
+.faq__item[open] summary::after {
+  content: "";
+  background-color: var(--cx-charcoal);
+  background-image: linear-gradient(var(--cx-yellow), var(--cx-yellow));
+  background-size: 12px 1.5px;
+  transform: rotate(180deg);
+}
+
+.faq__answer {
+  padding: 0 clamp(16px, 1.6vw, 24px) clamp(28px, 3vw, 36px);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 820px;
+}
+
+
+/* ==========================================================================
+   2. Card grids — the last row fills the width
+   --------------------------------------------------------------------------
+   Five industry cards in a three-across grid left a hole where a sixth card
+   would have been. Same for five service cards, six cross-links, thirty topic
+   tiles. The rule now is: whatever is left over on the final row grows to fill
+   it, so two cards under three are each half the row, not two thirds of it.
+
+   These were all `repeat(auto-fit, minmax(Npx, 1fr))` grids, where the column
+   count changes with the viewport — so an nth-child rule can't know which item
+   starts the last row. Wrapping flex does know: give every card the same
+   flex-basis the minmax had and let flex-grow settle the remainder. Same
+   breakpoints, same card widths on full rows, and it self-corrects at every
+   width instead of at the three we happened to test.
+   ========================================================================== */
+
+.services-grid,
+.uses-grid,
+.industries,
+.cross-links,
+.topic-grid,
+.sm-grid,
+.pm-practice__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+/* min-width:0 so a long word inside a card can't veto the shrink.
+
+   height:auto matters as much. A flex item only stretches to the height of its
+   line when its cross size is `auto` — a card carrying height:100%, which is
+   what these all had from their days as grid items, opts out of the stretch and
+   falls back to its own content height. That is how the BPMN card ended up 26px
+   shorter than the Lean card beside it. align-self says the same thing the
+   container's align-items already says, and survives a card that sets its own. */
+.services-grid > *,
+.uses-grid > *,
+.industries > *,
+.cross-links > *,
+.topic-grid > *,
+.sm-grid > *,
+.pm-practice__grid > * { min-width: 0; height: auto; align-self: stretch; }
+
+/* Basis per grid = the minmax() floor it used to carry, so full rows keep the
+   card count and width they already had. */
+.services-grid   > * { flex: 1 1 280px; }
+.uses-grid       > * { flex: 1 1 280px; }
+.industries      > * { flex: 1 1 300px; }
+.cross-links     > * { flex: 1 1 220px; }
+.topic-grid      > * { flex: 1 1 240px; }
+.sm-grid         > * { flex: 1 1 290px; }
+.pm-practice__grid > * { flex: 1 1 320px; }
+
+/* Thirty topic tiles is a directory, not a feature row. Letting the last two
+   double in width would make the tail of the list shout louder than the head,
+   so they fill the row but stop at the width of two normal tiles. */
+.topic-grid > * { max-width: 100%; }
+@media (min-width: 981px) {
+  .topic-grid > * { max-width: calc(50% - 6px); }
+}
+
+
+/* ==========================================================================
+   3. Long words stay inside their column
+   --------------------------------------------------------------------------
+   "Vier Leistungsfelder — von der Standortbestimmung bis zur Übergabe in den
+   Alltag." at 52px in a 440px column: "Standortbestimmung" alone measures
+   518px, so the line ran 21px past the column and under the cards next to it.
+
+   Two fixes, because it is two problems. The heading was also simply too big
+   for the column it sits in — a container query ties .h-section to the width
+   it actually gets rather than to the viewport, so the two-column sections
+   scale down and the full-width ones are untouched. Then hyphenation as the
+   safety net for every other compound noun on a German site.
+   ========================================================================== */
+
+.section__head { container-type: inline-size; }
+
+@supports (font-size: 1cqi) {
+  .section__head > .h-section {
+    /* 8.5cqi: 37px in a 440px column, and past ~610px the 3.25rem ceiling
+       takes over — which is where the full-width headings already were. */
+    font-size: clamp(1.75rem, 8.5cqi, 3.25rem);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Deutsche Silbentrennung — die eine Stelle, an der sie geregelt wird
+   --------------------------------------------------------------------------
+   Bricht ein langes Kompositum um, gehoert ein Trennstrich ans Zeilenende.
+   Vorher stand hier `hyphens: none` neben `overflow-wrap: break-word`: das
+   trennte "Digitalisierungsberatung" ohne jedes Zeichen mitten im Wort.
+
+   `hyphens: auto` allein war schon einmal drin und wurde zurueckgenommen,
+   weil Chromes deutsches Woerterbuch in einer 357px-Kartenspalte an fast
+   jedem Zeilenende trennte und die Komposita an der falschen Fuge aufmachte
+   ("Medi-enbrueche", "ab-tippfrei"). Genau dagegen steht jetzt
+   `hyphenate-limit-chars: 12 5 4`:
+
+     12  Woerter unter 12 Zeichen werden gar nicht getrennt
+          -> "abtippfrei" (10) bleibt ganz, der alte Fehlbruch entfaellt
+      5  mindestens 5 Zeichen vor dem Strich
+          -> "Medienbrueche" kann nur noch "Medien-brueche" werden
+      4  mindestens 4 Zeichen auf der naechsten Zeile
+          -> keine ein- und zweibuchstabigen Zeilenanfaenge
+
+   `overflow-wrap: break-word` bleibt als letzte Instanz stehen, fuer Woerter,
+   die auch getrennt nicht in die Spalte passen. Voraussetzung fuer die
+   Trennung ist `lang="de"` am <html> — steht auf allen ausgelieferten Seiten.
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6,
+.h-section, .h-lead, .hero__title, .final-cta__headline,
+p, li, dt, dd, figcaption, summary, blockquote {
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  -webkit-hyphenate-limit-before: 5;
+  -webkit-hyphenate-limit-after: 4;
+  -webkit-hyphenate-limit-lines: 2;
+  hyphenate-limit-chars: 12 5 4;
+  hyphenate-limit-lines: 2;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* Mobil ist die Spalte am schmalsten, dort wird die Trennung am dringendsten
+   gebraucht. cx-template.css und cx-hero.css setzen hier `overflow-wrap:
+   anywhere`, was ein Wort an jedem beliebigen Zeichen aufbricht — mit aktiver
+   Trennung ist das nicht mehr noetig und nimmt der Trennung nur die Arbeit ab.
+   Zurueck auf break-word, Trennung an, gleiche Grenzwerte wie oben. */
+@media (max-width: 820px) {
+  h1, h2, h3, h4, h5, h6,
+  .h-section, .h-lead, .cx-proof__h, .hero__title, .section__head {
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    hyphenate-limit-chars: 12 5 4;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+}
+
+/* hub-quality.css setzt dieselben Ueberschriften mobil auf
+   `hyphens: none !important` — das gewinnt sonst gegen die Regel oben, obwohl
+   diese Datei spaeter laedt. Gleiche Selektoren, gleiche Spezifitaet, hier
+   entschieden. */
+@media (max-width: 820px) {
+  body.cex-migrated-page h1,
+  body.cex-migrated-page h2,
+  body.cex-migrated-page h3,
+  body.cex-migrated-page .h-section,
+  body.cex-migrated-page .hero__title,
+  body.cex-migrated-page .cx-proof__h {
+    -webkit-hyphens: auto !important;
+    hyphens: auto !important;
+    hyphenate-limit-chars: 12 5 4;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+}
+
+/* Kurze Beschriftungen und Kennzahlen, die anderswo auf `overflow-wrap:
+   anywhere` stehen. Auch sie sollen an der Silbe trennen statt am Zeichen. */
+.cx-trust__creds li,
+.cx-trust__creds b,
+.tree-major-summary b,
+.tree-branch-summary b,
+.cross-link__tag,
+.trust-item__num,
+.trust-item__label {
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  hyphenate-limit-chars: 12 5 4;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+
+/* ==========================================================================
+   4. Mobile alignment — section heads centred, cards flush left
+   --------------------------------------------------------------------------
+   cx-template.css centres everything below 820px, cards included, so a
+   four-line paragraph in a card sat as a centred block with both edges ragged.
+   That is the hardest shape to read on a narrow screen: the eye has to hunt for
+   the start of every line.
+
+   The house rule is centred section heads and intros, left-aligned body and
+   cards, so the split is drawn at the card edge. Section heads keep their
+   centring; anything inside a card, a step or a list item goes flush left.
+   Equal specificity to the rules it replaces, and this file loads last.
+   ========================================================================== */
+
+@media (max-width: 820px) {
+  [class*="card"],
+  [class*="card"] p,
+  [class*="card"] li,
+  [class*="card"] h2,
+  [class*="card"] h3,
+  [class*="card"] h4,
+  .method-step,
+  .method-step__title,
+  .method-step__body,
+  .method-step__when,
+  .faq__item summary,
+  .faq__answer { text-align: left; }
+
+  .bv-phase,
+  .method-steps > * { text-align: left; }
+
+  /* The homepage capability cards are flex columns that centre their children,
+     so text-align alone leaves the tag and the divider floating in the middle. */
+  .cap-card__body { align-items: flex-start; text-align: left; }
+  .cap-card__tag,
+  .cap-card__list li { justify-content: flex-start; }
+
+  /* The number chips and tags at the top of a card are centred by a family of
+     `margin-inline: auto !important` rules in cx-template.css. With the text now
+     flush left, a centred chip floating above it reads as a second, competing
+     column. margin-right:auto keeps the fit-content width and pins it left.
+     Section-level .eyebrow is deliberately left out — section heads stay centred. */
+  .method-step__num,
+  .method-step__when,
+  .service-card__num,
+  .problem-card__num,
+  .diff-item__num,
+  .use-card__tag,
+  .bv-phase-num,
+  .bv-phase-range,
+  .ph-tag,
+  .svc-tag,
+  .ws-tag,
+  [class*="card"] .eyebrow,
+  [class*="card"] [class*="__eyebrow"] {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+
+  /* Exception: on the two pages that draw the process as a vertical timeline the
+     number sits ON the axis, so it stays centred — the axis line runs through it. */
+  .process-timeline .method-step__num {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* Forms. A centred label above a full-width input leaves the two out of line
+     with each other; the eye reads the field, not the label. Buttons keep their
+     own centring — centred text in a button is right. */
+  form, form p, form label,
+  .form__label, .form__consent, .form__optional, .form__hint,
+  .cx-form, .cx-form__eyebrow, .cx-form__h, .cx-form__row,
+  .cx-form__hint, .cx-form__consent { text-align: left; }
+}
+
+
+/* ==========================================================================
+   5. Contact form — Telefon is never optional
+   --------------------------------------------------------------------------
+   Every contact form on the site carries the same four fields, and the phone
+   number is one we always want. The label used to read "Telefon optional"; the
+   marker is gone from the markup on all 33 pages and the field now carries
+   `required`, the same way E-Mail does.
+
+   This rule is the guard, not the fix: an attribute cannot be set from CSS, so
+   if a new page is built from an older template the marker is at least never
+   shown next to a telephone field. Scoped to type="tel" so a genuinely optional
+   field somewhere else can still say so.
+   ========================================================================== */
+
+.form__label:has(input[type="tel"]) .form__optional,
+.cx-form__row:has(input[type="tel"]) .form__optional,
+label:has(input[name="phone"]) .form__optional { display: none; }
+
+
+/* ==========================================================================
+   6. "Aus der Praxis" — a named consultant answering a real question
+   --------------------------------------------------------------------------
+   The Enterprise-Architecture hub used to close with four rhetorical questions
+   in the cx-proof grid. They were questions nobody had actually asked, and they
+   had no answers underneath them — so the block promised evidence and delivered
+   a restatement of the service. Hannes replaced them with three questions he is
+   genuinely asked in first meetings, each with the answer he gives, including
+   the numbers.
+
+   That content is long-form, so it cannot live in a 260px card. Each item is a
+   two-column row instead: the question holds the left column and stays readable
+   as a standalone line for skimmers, the answer runs down the right at a normal
+   measure. Numbers worth remembering are lifted out into chips below the answer.
+
+   Shared, not page-local: the same shape fits any hub page where a founder can
+   answer a real question with real figures.
+   ========================================================================== */
+
+.cx-practice { display:grid; gap:20px }
+
+.cx-practice__item {
+  background:#fff;
+  border:1px solid var(--line);
+  padding:clamp(24px,3vw,38px);
+  display:grid;
+  grid-template-columns:minmax(230px,300px) 1fr;
+  gap:clamp(20px,3vw,44px);
+  align-items:start;
+}
+
+.cx-practice__label {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-size:0.72rem;
+  font-weight:800;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--cx-charcoal-3);
+  margin-bottom:12px;
+}
+.cx-practice__label::before {
+  content:"";
+  display:inline-block;
+  width:18px;
+  height:3px;
+  background:var(--cx-accent);
+}
+
+.cx-practice__q {
+  margin:0;
+  font-size:clamp(1.12rem,1.7vw,1.38rem);
+  line-height:1.28;
+  letter-spacing:-0.01em;
+  color:var(--cx-charcoal);
+}
+
+.cx-practice__a {
+  margin:0;
+  font-size:1rem;
+  line-height:1.72;
+  color:var(--muted);
+}
+.cx-practice__a + .cx-practice__a { margin-top:14px }
+.cx-practice__cases + .cx-practice__a { margin-top:18px }
+
+/* The three mandate types inside the third answer. A rule on the left, not a
+   bullet: these are named cases with a duration each, not a list of equals. */
+.cx-practice__cases { list-style:none; margin:18px 0 0; padding:0; display:grid; gap:16px }
+.cx-practice__case { border-left:3px solid var(--cx-warm-4); padding-left:16px }
+.cx-practice__case strong { display:block; margin-bottom:4px; font-size:0.98rem; color:var(--cx-charcoal) }
+.cx-practice__case span { display:block; font-size:0.95rem; line-height:1.65; color:var(--muted) }
+.cx-practice__case em {
+  display:block;
+  margin-top:6px;
+  font-style:normal;
+  font-size:0.82rem;
+  font-weight:700;
+  letter-spacing:0.04em;
+  color:var(--cx-charcoal-2);
+}
+
+/* Numbers lifted out of the prose so a skimmer gets the answer without reading it. */
+.cx-practice__facts { list-style:none; margin:20px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:10px }
+.cx-practice__fact {
+  background:var(--cx-warm-2);
+  border:1px solid var(--cx-warm-4);
+  padding:8px 12px;
+  font-size:0.82rem;
+  line-height:1.35;
+  color:var(--cx-charcoal-2);
+}
+.cx-practice__fact b { color:var(--cx-charcoal); font-weight:800 }
+
+/* Who "wir" and "ich" are. Sits above the questions so the voice is anchored
+   before the first answer is read. */
+.cx-practice__by {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin:22px 0 34px;
+}
+.cx-practice__by img { width:46px; height:46px; object-fit:cover; border:1px solid var(--line) }
+.cx-practice__by span { font-size:0.9rem; line-height:1.45; color:var(--muted); text-align:left }
+.cx-practice__by b { display:block; color:var(--cx-charcoal) }
+
+@media (max-width:860px) {
+  .cx-practice__item { grid-template-columns:1fr; gap:16px; text-align:left }
+  .cx-practice__q, .cx-practice__a, .cx-practice__case, .cx-practice__label { text-align:left }
+  .cx-practice__by { justify-content:flex-start; margin:20px 0 26px }
+}
+
+/* ---------------------------------------------------------------------------
+   ZAHLEN-PLAKETTEN — die Ziffer sitzt mittig im Kasten
+   ---------------------------------------------------------------------------
+   1. MOBIL, der sichtbare Fehler. Weiter oben in dieser Datei (und noch einmal
+      in styles.css) werden unter 820 px alle Kicker, Marken und Nummern nach
+      links gerückt — richtig für Textmarken, falsch für die Nummern. Die
+      Nummern stehen in einem farbigen Quadrat fester Größe; `justify-content:
+      flex-start` klebt die Ziffer dort an den linken Rand. Gemessen: 14 px
+      Versatz im 46er Quadrat, 7 px im 32er und im 28er. Die Regel dort ist mit
+      !important gesetzt, also braucht die Rücknahme hier auch eines.
+
+      Der Kasten selbst bleibt linksbündig — `margin-left:0; margin-right:auto`
+      aus der Regel oben gilt weiter. Nur sein Inhalt wird wieder zentriert.
+
+   2. WAAGERECHT, überall. Bei gesperrter Schrift zählt hinter der letzten
+      Ziffer noch ein Sperrabstand zur Textbreite. Zentriert wird also eine Box,
+      die rechts breiter ist als die sichtbare Ziffernfolge — die Ziffern sitzen
+      um die halbe Sperrung zu weit links. Innenabstand links in Höhe der
+      Sperrung verschiebt den Inhalt um genau die Hälfte davon zurück und hebt
+      das auf. Bei fester Größe und box-sizing:border-box wächst der Kasten
+      dadurch nicht (geprüft: 46x46 vorher wie nachher).
+
+      Der Wert muss zur Sperrung der jeweiligen Plakette passen. Er steht
+      deshalb nicht hier, sondern jeweils direkt neben der letter-spacing-Zeile,
+      die ihn nötig macht — in cx-template.css und hub-quality.css. Nur die
+      beiden Plaketten mit seitenweit einheitlicher Sperrung stehen unten.
+
+   Senkrecht bleibt es, wie es ist: dort liegt der Rest bei rund 0,3 px und
+   wechselt je nach Schriftgröße das Vorzeichen. Das ist Rundung, kein Fehler —
+   dagegen anzurechnen würde es an anderer Stelle schlechter machen.
+--------------------------------------------------------------------------- */
+.cx-drawer__num  { padding-left: .04em }
+.link-group__num { padding-left: .08em }
+
+/* Diese beiden haben bereits Innenabstand. Der Ausgleich wird deshalb zwischen
+   links und rechts umgeschichtet, statt hinzugefügt — sonst wandert die Ziffer
+   um die vollen 10 bzw. 8 px. Umgeschichtet zählt der Ausgleich doppelt (links
+   plus, rechts minus), also je die Hälfte der Sperrung. */
+.cap-card__index   { padding-left: calc(10px + .01em); padding-right: calc(10px - .01em) }
+.outcomes__tab-num { padding-left: calc(8px  + .01em); padding-right: calc(8px  - .01em) }
+
+@media (max-width: 820px) {
+  .service-card__num,
+  .problem-card__num,
+  .method-step__num {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
+
+/* =========================================================================
+   Breadcrumb — der sichtbare Pfad zur Breadcrumb-Auszeichnung
+   -------------------------------------------------------------------------
+   Die BreadcrumbList stand seit jeher im Markup, auf der Seite war sie nicht
+   zu sehen. Google verlangt, dass die Auszeichnung abbildet, was die Seite
+   zeigt; ohne den sichtbaren Pfad ist die Auszeichnung eine Behauptung.
+   Sitzt im Hero über der Augenbraue, damit die Hero-Geometrie bleibt: der
+   Pfad ist zwei Zeilen hoch und schiebt nichts unter die Falz.
+   ========================================================================= */
+.cx-crumbs {
+  margin: 0 0 14px;
+  animation: acn-deco-fade-in 1100ms var(--acn-ease) var(--acn-delay-1) backwards;
+}
+.cx-crumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+.cx-crumbs__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+/* Das Trennzeichen gehört zur Darstellung, nicht zum Text — sonst liest ein
+   Screenreader "Startseite Schrägstrich KI-Beratung" vor. */
+.cx-crumbs__item + .cx-crumbs__item::before {
+  content: "/";
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.75rem;
+}
+.cx-crumbs__item a {
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  padding: 2px 0;
+}
+.cx-crumbs__item a:hover,
+.cx-crumbs__item a:focus-visible {
+  color: #fff;
+  border-bottom-color: rgba(255, 255, 255, 0.55);
+}
+.cx-crumbs__item [aria-current="page"] {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 500;
+}
+@media (max-width: 900px) {
+  .cx-crumbs { margin-bottom: 12px; }
+  .cx-crumbs__list { justify-content: center; }
+}
+
+/* -------------------------------------------------------------------------
+   Zwei Nachbesserungen aus dem Rendercheck vom 4. August 2026.
+
+   1. Das Tippziel im Breadcrumb war 22 Pixel hoch. Die Regel für die Grösse
+      eines Tippziels nimmt Links aus, die mitten im Satz stehen — ein Pfad
+      oben auf der Seite ist keiner. Ein Pixel Polsterung oben und unten
+      bringt ihn über die Grenze, ohne die Zeile zu verschieben.
+   2. Auf dem Handy stand Fliesstext in Karten bei 13 bis 15 Pixel und der
+      Datenschutzhinweis am Formular bei 11,5. Gelesen wird das mit
+      zusammengekniffenen Augen. Untergrenze ist jetzt 16 Pixel für Fliesstext
+      und 14 für den rechtlichen Kleingedruckten.
+   ------------------------------------------------------------------------- */
+.cx-crumbs__item a,
+.cx-crumbs__item [aria-current="page"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+@media (max-width: 900px) {
+  .ki-case-flow__step,
+  .cx-proof__card p,
+  .compliance-item,
+  .cx-trust__creds,
+  .cx-ig__lead,
+  .ki-funnel p,
+  .ki-foundation-card p,
+  .form__sub {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .form__privacy {
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Untergrenze für Fliesstext auf dem Handy.
+
+   Die Karten und Blöcke setzen ihren Text seitenweise auf 0,90 bis 0,95 rem.
+   Am Schreibtisch geht das durch, auf dem Handy landet man bei 13 bis 15
+   Pixel — darunter wird gekniffen statt gelesen. Auf Bildschirmen bis 900
+   Pixel gilt deshalb 16 Pixel als Boden. Am Desktop bleibt die Typo, wie sie
+   ist; das hier greift ausschliesslich mobil.
+
+   Das "body" davor ist kein Zierrat: die Regeln stehen in <style>-Blöcken je
+   Seite und damit NACH dieser Datei. Bei gleicher Gewichtung gewinnt die
+   spätere. Ein zusätzliches Element hebt die Gewichtung gerade so an —
+   billiger als !important, das die nächste Änderung blockieren würde.
+   ------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  body #leistungen .service-card p,
+  body #vorteile.delivery-principles .delivery-principles__item p,
+  body .cx-prose ul li,
+  body .data-block p,
+  body .deep-section__block p,
+  body .deep-section__block ul,
+  body .digital-practice__principle p,
+  body .evidence-panel__head p,
+  body .h-lead,
+  body .impact-card p,
+  body .ki-case-card ul,
+  body .ki-case-flow__step p,
+  body .ki-foundation-card p,
+  body .ki-funnel p,
+  body .ki-question p,
+  body .mandate-principle p,
+  body .modifier-cases-signals.modifier-  body p,
+  body .modifier-context.container > p,
+  body .modifier-diag-appr.modifier-  body p,
+  body .pm-choice__card p,
+  body .pm-contrast__row>p,
+  body .pm-governance__layer p,
+  body .pm-visual__head p,
+  body .practice-card p,
+  body .practice-market p,
+  body .practice-scale p,
+  body .related-services__head p,
+  body .support-choice p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
+/* Nachzügler: dieselben zwei Bausteine stehen ebenfalls in Seiten-<style>-
+   Blöcken und brauchen deshalb dieselbe Gewichtungsanhebung. */
+@media (max-width: 900px) {
+  body .compliance-item,
+  body .cx-trust__creds {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Nachtrag zur Untergrenze — zwei Lücken, im Browser bei 390 Pixel gemessen,
+   nicht im Quelltext gesucht.
+
+   1. Die beiden Regeln oben treffen den BEHÄLTER. Der kleine Text sitzt aber
+      im Kind: .compliance-item hat ein <p> darin, .cx-trust__creds ein <li>.
+      Das Kind bringt seine eigene, kleinere Grösse mit und war deshalb
+      unverändert bei 15 Pixel — auf 39 beziehungsweise 66 Fundstellen.
+      Wer den Behälter setzt, hat das Kind noch nicht gesetzt.
+
+   2. Vierzehn weitere Bausteine standen nie auf der Liste. Am deutlichsten
+      die Zeile mit den Ansprechpartnern und die Fussnote unter den
+      Projektzahlen: beide bei 12 Pixel.
+
+   Zwei Böden, weil zwei Sorten Text: ganze Sätze werden gelesen und bekommen
+   16 Pixel. Bildunterschriften und Kennzahlen-Etiketten werden überflogen und
+   bekommen 14. Nach oben wird nichts angefasst — was schon grösser ist,
+   bleibt grösser.
+   ------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  body .compliance-item p,
+  body .cx-trust__creds li,
+  body .cap-card__copy,
+  body .cap-card__list li,
+  body .journey-step__copy,
+  body .journey__figure-copy,
+  body .benefit__copy,
+  body .outcomes__principle-copy,
+  body .faq-followup__copy,
+  body .dmaic-cycle__outcome,
+  body .method-step__body,
+  body .final-cta__reassurance,
+  body .support-choice__note,
+  body .practice-case__note,
+  body .process-sequence__note {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  body .faq-followup__byline,
+  body .practice-scale__note,
+  body .cx-practice__fact {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Drei Bausteine haben den Boden oben ignoriert. Nachgesehen statt geraten —
+   im Browser die gewinnende Regel abgefragt, nicht im Quelltext gesucht:
+
+     .practice-scale__note   Seiten-<style>   0,75rem !important
+     .method-step__body      Seiten-<style>   0,9rem  !important
+     .cx-trust__creds li     founders.css     0,9375rem !important
+
+   Gegen ein !important hilft Gewichtung nicht; da gewinnt nur ein zweites.
+   Sonst gilt hier weiter das Gegenteil — !important ist die Ausnahme und
+   steht nur da, wo die andere Seite schon eins gesetzt hat.
+   ------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  body .cx-trust .cx-trust__col .cx-trust__creds li,
+  body .cx-trust__creds li,
+  body .process-sequence__note {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+
+  /* .method-step__body verliert gegen body.change-management-page
+     .method-step__body (0,2,0). Das [class] hebt die eigene Gewichtung auf
+     0,2,1 — greift auf jeder Seite, ohne den Seitennamen zu kennen. */
+  body[class] .method-step__body {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+
+  body .practice-scale__note {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Kontrast. Drei Bausteine lagen unter dem Mindestwert von 4,5:1 für
+   Fliesstext — gemessen im Browser, nicht geschätzt:
+     .form__privacy    #8A8F94 auf Weiss = 3,26
+     .ki-case-card__label und .cross-link__tag  #D96800 = 3,1 bis 3,5
+   Grau und Orange bleiben Grau und Orange, nur dunkler. Betroffen ist
+   ausschliesslich Text, der ohnehin klein gesetzt ist; Flächen und Rahmen
+   in Markenorange bleiben unangetastet.
+   ------------------------------------------------------------------------- */
+body .form__privacy,
+body .form__privacy a {
+  color: #676c71;
+}
+body .ki-case-card__label,
+body .cross-link__tag {
+  color: #8f4400;
+}
+
+/* Zwei Nachzügler aus dem Kontrast-Durchgang über mehrere Seitentypen:
+   .caps__pillar-num auf der Startseite (3,43:1) und .mining-step__num auf
+   der Prozessoptimierung (3,95:1). Beide sind Ziffern bei 10 bis 11 Pixel —
+   genau die Grösse, bei der ein schwaches Grau verschwindet. */
+body .caps__pillar-num,
+body .mining-step__num {
+  color: #4a5158;
+}
+
+/* Kartenüberschriften in dunklen Bändern.
+   Die Karten selbst sind hell gefüllt (--cx-warm-2), das Band setzt aber
+   color:#F5F3F1 für alles darin. Der Fliesstext der Karte hat eine eigene
+   Farbe und war deshalb lesbar — die Überschrift hatte keine und erbte das
+   Bandweiss. Ergebnis: helle Schrift auf heller Karte, Kontrast 1,03:1,
+   praktisch unsichtbar. Betroffen waren 17 Seiten mit je drei Überschriften.
+   Die Karte ist hell, also gehört ihr die dunkle Schrift — unabhängig davon,
+   in welchem Band sie steht. */
+body :is(.service-card, .problem-card, .use-card, .industry-card) :is(h2, h3, h4) {
+  color: var(--cx-charcoal);
+}
+
+/* Die drei Marken auf der Fallkarte der Prozessoptimierung ("Ausgangslage",
+   "Veränderung", "Wirkung") standen im Markenorange auf dunklem Grund: 3,95:1
+   bei 10 Pixel. Für Schrift dieser Größe verlangt die Norm 4,5:1. Dieselbe
+   Farbe, nur so weit aufgehellt, dass sie die Grenze nimmt (4,6:1). Das Orange
+   auf Flächen, Rahmen und größerer Schrift bleibt unberührt. */
+body .practice-case__step span {
+  color: #ff9530;
+}
+
+/* Einwilligungsbanner: alle drei Schaltflächen gleich gewichtet.
+   "Alle akzeptieren" war orange gefüllt, "Nur notwendige" und "Auswahl
+   speichern" nur umrandet. Grösse, Schriftgrad und Ebene waren schon gleich —
+   nur die Füllung zog das Auge auf das Zustimmen. Genau dieses Muster nennen
+   die Aufsichtsbehörden als Anstupsen. Die Füllung fällt weg, alle drei
+   Schaltflächen sind jetzt identisch: gleiche Grösse, gleicher Rahmen,
+   gleiche Farbe. Das Markenorange hat auf einem Einwilligungsbanner nichts
+   zu suchen. */
+/* Zwei Stylesheets setzen die Füllung mit !important, eines davon über
+   .cex-migrated-page. Deshalb hier dieselbe Kettenlänge plus body — sonst
+   gewinnt das ältere Blatt. (Die bekannte polish.css-Falle.) */
+body.cex-migrated-page .privacy-consent__primary,
+body .privacy-consent__primary {
+  background: #fff !important;
+  color: var(--cx-charcoal) !important;
+  border-color: var(--cx-charcoal) !important;
+}
+body.cex-migrated-page .privacy-consent__primary:hover,
+body.cex-migrated-page .privacy-consent__secondary:hover,
+body .privacy-consent__primary:hover,
+body .privacy-consent__secondary:hover {
+  background: var(--cx-charcoal) !important;
+  border-color: var(--cx-charcoal) !important;
+  color: #fff !important;
+}
+
+/* Honigfalle fuer Kontaktformulare: unsichtbar fuer Menschen, fuer
+   Screenreader nicht erreichbar (aria-hidden im HTML), aber technisch
+   vorhanden fuer Bots. Gilt sitesweit, weil dieses Blatt auf jeder Seite
+   mit Formular zuletzt laedt (siehe Kopfkommentar dieser Datei). */
+.form__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+
+/* --- Handy: der Hero traegt nicht das ganze Formular ----------------------
+   Gemessen am 2026-08-04 bei 390x844 Pixeln: der Hero war 1553 Pixel hoch,
+   also 184 Prozent der Bildschirmhoehe — davon 888 Pixel allein das
+   Formular. Wer die Seite auf dem Handy oeffnet, scrollt zwei volle
+   Bildschirme, bevor der erste Inhalt kommt. Die Regel verlangt rund zwei
+   Drittel der Bildschirmhoehe und niemals mehr als eine ganze.
+   Auf dem Handy gibt es ohnehin keine zwei Spalten. Der Hero zeigt dort
+   Text und Handlungsaufruf; das Formular am Seitenende bleibt unveraendert
+   stehen und traegt die Sprungmarke, auf die der Knopf zeigt. */
+@media (max-width: 900px) {
+  body .hero .hero__form-wrap { display: none; }
+  body .hero { min-height: 62vh; }
+}

@@ -1,0 +1,602 @@
+/* ==========================================================================
+   CEx — cex.koeln
+   --------------------------------------------------------------------------
+   Loads last, after the six production stylesheets. It adds only what this
+   one-page site needs on top of them:
+
+     1. .svc          — the six services as a vertical list instead of the
+                        grid, keeping the original films
+     2. top bar       — the production bar assumes a menu drawer holds the
+                        navigation below 1200px. There is no drawer here, so
+                        the bar has to carry the links itself
+     3. .cta-dock     — the sticky bottom call to action
+     4. section intro — heading and lead start on the same line
+
+   Every colour, radius and easing is a token from cx-design-system.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1 · Services as a vertical list
+   -------------------------------------------------------------------------- */
+.svc-list {
+  margin-top: clamp(40px, 4vw, 64px);
+  border-top: 1px solid var(--line);
+}
+
+.svc__pillar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 34px 0 18px;
+}
+
+.svc-list > .svc__pillar:first-child {
+  padding-top: 40px;
+}
+
+.svc__pillar-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--cx-accent);
+  flex-shrink: 0;
+}
+
+.svc__pillar-divider {
+  width: 28px;
+  height: 2px;
+  background: var(--cx-accent);
+  flex-shrink: 0;
+}
+
+.svc__pillar-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--cx-charcoal-3);
+}
+
+.svc {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+  padding: clamp(32px, 3.6vw, 52px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.svc__media {
+  position: relative;
+  overflow: hidden;
+  background: var(--cx-charcoal);
+  aspect-ratio: 16 / 10;
+}
+
+.svc__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.svc__media-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(30, 35, 39, .10) 0%, rgba(30, 35, 39, .46) 100%);
+}
+
+.svc__index {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 10px 16px;
+  background: var(--cx-accent);
+  color: var(--cx-accent-on);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  line-height: 1;
+}
+
+.svc__body {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 12 5 4;
+}
+
+.svc__tag {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cx-accent);
+  margin-bottom: 14px;
+}
+
+.svc__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(23px, 2.4vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  color: var(--cx-charcoal);
+  margin: 0 0 14px;
+}
+
+.svc__copy {
+  font-size: clamp(15px, 1.1vw, 17px);
+  line-height: 1.62;
+  color: var(--cx-charcoal-3);
+  margin: 0 0 18px;
+  max-width: 62ch;
+}
+
+.svc__list {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.svc__list li {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--cx-charcoal);
+  background: var(--cx-warm-2);
+  border: 1px solid var(--line);
+  padding: 8px 13px;
+}
+
+.svc__link {
+  display: inline-flex;
+}
+
+@media (max-width: 900px) {
+  .svc {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2 · Top bar
+   --------------------------------------------------------------------------
+   polish.css builds the bar around a menu drawer: the in-page links only
+   appear at ≥1200px because below that the drawer is meant to hold them, and
+   the CTA drops to a 44px icon-only square at ≤920px so it does not collide
+   with the menu button. This site has no drawer and no menu button, so both
+   rules leave the bar with no navigation and an unlabelled arrow. The three
+   blocks below hand the space back.
+   -------------------------------------------------------------------------- */
+
+/* The 300px middle slot was reserved for a widget this page does not carry.
+   Empty, it pushes the links hard left and the CTA hard right. */
+.cex-placeholder .nav__slot {
+  min-width: 0;
+}
+
+.cex-placeholder .nav__inner {
+  grid-template-columns: auto 1fr auto;
+}
+
+/* Links appear as soon as they fit — 1024px, not 1200px, because there is no
+   menu button next to the CTA competing for the same row. */
+@media (min-width: 1024px) {
+  .cex-placeholder .nav__primary {
+    display: flex;
+  }
+}
+
+/* The CTA keeps its words all the way down. A lone arrow in a top bar is not
+   a call to action, it is a guess. */
+@media (max-width: 920px) {
+  .cex-placeholder .nav .nav__cta-text {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+
+  .cex-placeholder .nav .nav__cta {
+    width: auto;
+    padding: 9px 14px;
+    gap: 8px;
+    font-size: .78125rem;
+  }
+
+  .cex-placeholder .nav .nav__cta .btn__icon {
+    width: 18px;
+    height: 18px;
+    background: var(--cx-accent);
+    color: var(--cx-accent-on);
+  }
+}
+
+/* Under ~430px the full label and the wordmark stop fitting side by side, so
+   the label shortens rather than the button becoming an icon. */
+@media (max-width: 430px) {
+  .cex-placeholder .nav .nav__cta-text {
+    font-size: 0;
+  }
+
+  .cex-placeholder .nav .nav__cta-text::after {
+    content: "Erstgespräch";
+    font-size: .8125rem;
+  }
+}
+
+/* --- 2b · The bar halves on scroll ---------------------------------------
+   script.js already puts .is-scrolled on the bar past 40px. Everything that
+   sets the bar's height has to come down together — the row height, the
+   wordmark and the CTA — or the bar keeps its old height with a small logo
+   rattling around inside it.
+
+   Desktop 64 → 32px and mobile 52/56 → 28px are both a straight halving. The
+   CTA lands at 30/26px tall, above the 24px WCAG 2.5.8 minimum target, and
+   the whole bar animates rather than jumping. */
+/* One duration and one curve for every part of the move — the bar, the
+   wordmark, the button leaving the bar and the dock arriving at the bottom.
+   Different numbers here are what make a synchronised transition read as
+   several things happening at once. */
+.cex-placeholder {
+  --shrink: 320ms;
+}
+
+.cex-placeholder .nav__inner,
+.cex-placeholder .nav__brand img {
+  transition: height var(--shrink) var(--acn-ease),
+              min-height var(--shrink) var(--acn-ease),
+              width var(--shrink) var(--acn-ease),
+              padding var(--shrink) var(--acn-ease);
+}
+
+.cex-placeholder .nav.is-scrolled .nav__inner {
+  height: 32px;
+  min-height: 32px;
+}
+
+/* The wordmark is 120 x 48 — 2.5:1. Half of it is 60 x 24, and it has to stay
+   2.5:1: object-fit is `contain`, so a box of the wrong shape does not distort
+   the logo, it letterboxes it, leaving dead space that reads as a broken gap
+   between the wordmark and the first link. */
+.cex-placeholder .nav.is-scrolled .nav__brand img {
+  width: 60px !important;
+  height: 24px !important;
+}
+
+/* The link text does not change size — text that resizes mid-scroll is what
+   makes a shrinking bar look unsettled. Only its padding comes in, from 6px to
+   3px a side. At 6px each link is a 33px box, one pixel taller than the 32px
+   bar, and that single pixel is enough to push the underline onto the bar's
+   bottom edge and make the row look like it is spilling out. At 3px the box is
+   27px and sits centred with room to spare. */
+.cex-placeholder .nav__primary a {
+  transition: padding var(--shrink) var(--acn-ease);
+}
+
+.cex-placeholder .nav.is-scrolled .nav__primary a {
+  padding-block: 3px;
+}
+
+/* --- the button hands over to the dock ------------------------------------
+   Fading it was not enough. It stayed 48px tall in the layout, and because the
+   bar is a grid, that 48px row went on setting the height every item was
+   centred in — so at a 32px bar the wordmark and the links sat 8px low and
+   hung out of the bottom edge. It has to collapse, not just disappear. */
+.cex-placeholder .nav .nav__cta {
+  opacity: 1;
+  overflow: hidden;
+  transition: opacity var(--shrink) var(--acn-ease),
+              transform var(--shrink) var(--acn-ease),
+              min-height var(--shrink) var(--acn-ease),
+              height var(--shrink) var(--acn-ease),
+              padding var(--shrink) var(--acn-ease),
+              visibility 0ms linear 0ms;
+}
+
+.cex-placeholder .nav.is-scrolled .nav__cta {
+  opacity: 0;
+  transform: translateY(-8px);
+  min-height: 0;
+  height: 0;
+  padding-block: 0;
+  margin-block: 0;
+  border-width: 0;
+  pointer-events: none;
+  visibility: hidden;
+  /* visibility cannot be interpolated, so it waits until the fade has
+     finished rather than snapping the button away on the first frame. */
+  transition-delay: 0ms, 0ms, 0ms, 0ms, 0ms, var(--shrink);
+}
+
+/* Anchors land under a 33px bar once the page is scrolled, not the 80px the
+   production stylesheet reserves for the full-height one. */
+html {
+  scroll-padding-top: 48px;
+}
+
+@media (max-width: 920px) {
+  .cex-placeholder .nav.is-scrolled .nav__inner {
+    height: 28px;
+    min-height: 28px;
+  }
+
+  /* Mobile wordmark is 100 x 40, so half is 50 x 20 — same 2.5:1. */
+  .cex-placeholder .nav.is-scrolled .nav__brand img {
+    width: 50px !important;
+    height: 20px !important;
+  }
+
+  html {
+    scroll-padding-top: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cex-placeholder {
+    --shrink: .01ms;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3 · Sticky bottom call to action
+   --------------------------------------------------------------------------
+   Hidden until the hero has gone, and hidden again once the contact section
+   is on screen — a dock that repeats the button the visitor is already
+   looking at is noise, and it would also sit on top of the footer.
+   -------------------------------------------------------------------------- */
+.cta-dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  background: var(--cx-band);
+  border-top: 1px solid var(--line-on-band);
+  box-shadow: 0 -12px 28px -20px rgba(30, 35, 39, .55);
+  transform: translateY(101%);
+  opacity: 0;
+  transition: transform var(--shrink, 320ms) var(--acn-ease),
+              opacity var(--shrink, 320ms) var(--acn-ease);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.cta-dock.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Three columns, not two: the sentence on the left, the buttons in the middle
+   and an empty column of the same width on the right. The buttons then sit on
+   the true centre line of the bar — where the eye already is on a long scroll —
+   instead of being pushed to the right edge by the sentence. */
+.cta-dock__inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: 12px var(--container-px);
+}
+
+.cta-dock__inner::after {
+  content: "";
+}
+
+.cta-dock__copy {
+  min-width: 0;
+  max-width: 34ch;
+  color: var(--cx-band-ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.cta-dock__copy span {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: var(--cx-band-muted);
+}
+
+.cta-dock__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cta-dock__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 11px 18px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  border-radius: 0;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+
+.cta-dock__btn--ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .34);
+  color: var(--cx-band-ink);
+}
+
+.cta-dock__btn--ghost:hover,
+.cta-dock__btn--ghost:focus-visible {
+  background: rgba(255, 255, 255, .10);
+  border-color: rgba(255, 255, 255, .6);
+}
+
+.cta-dock__btn--primary {
+  background: var(--cx-accent);
+  border: 1px solid var(--cx-accent);
+  color: var(--cx-accent-on);
+}
+
+.cta-dock__btn--primary:hover,
+.cta-dock__btn--primary:focus-visible {
+  background: var(--cx-accent-2);
+  border-color: var(--cx-accent-2);
+}
+
+.cta-dock__btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.cta-dock a:focus-visible {
+  outline: 2px solid var(--cx-accent);
+  outline-offset: 3px;
+}
+
+/* A ring that leaves the button and keeps going. One wave every two seconds
+   with no gap between them, spreading 26px out and fading as it goes, with the
+   button itself swelling 3% underneath. Continuous rather than a beat every few
+   seconds, because a rhythm with pauses in it is easy to scroll past.
+
+   Both ends of the cycle sit at 0 spread, which is exactly the button's own
+   edge and therefore invisible, so the loop has no seam. It pauses on hover —
+   once the pointer is on the button the ring has done its job — and it does not
+   run at all for anyone who has asked the system for reduced motion. */
+@keyframes cta-dock-pulse {
+  0%   { transform: scale(1);     box-shadow: 0 0 0 0 rgba(255, 122, 0, .6); }
+  55%  { transform: scale(1.03); }
+  100% { transform: scale(1);     box-shadow: 0 0 14px 26px rgba(255, 122, 0, 0); }
+}
+
+.cta-dock.is-visible .cta-dock__btn--primary {
+  animation: cta-dock-pulse 2000ms cubic-bezier(0, 0, .25, 1) infinite;
+}
+
+.cta-dock__btn--primary:hover,
+.cta-dock__btn--primary:focus-visible {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-dock.is-visible .cta-dock__btn--primary {
+    animation: none;
+  }
+}
+
+/* Phone-width: the sentence goes, the two buttons split the row. Two 44px
+   targets side by side beat one wide button with a caption above it. */
+@media (max-width: 720px) {
+  .cta-dock__copy {
+    display: none;
+  }
+
+  .cta-dock__inner {
+    display: flex;
+    gap: 10px;
+    padding: 10px 16px;
+  }
+
+  .cta-dock__inner::after {
+    display: none;
+  }
+
+  .cta-dock__actions {
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+  }
+
+  .cta-dock__btn {
+    padding: 12px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-dock {
+    transition-duration: .01ms;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4 · Section intro — heading and lead start on the same line
+   --------------------------------------------------------------------------
+   styles.css sets align-items:end on the two-column intro, which drops the
+   lead to the bottom of the heading's box. On a heading that runs to three
+   lines the lead ends up starting two lines below it.
+   -------------------------------------------------------------------------- */
+.cex-placeholder .section__intro-grid {
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   6 · FAQ — put the plus signs back in one straight column
+   --------------------------------------------------------------------------
+   The design pushes the plus to the right edge of the row, so the six of them
+   line up. That works because <summary> is a flex row with space-between and
+   the question and the plus are its two children.
+
+   WordPress wraps the question in an <h3> for the heading outline, which is
+   right for SEO but leaves <summary> with a single child. The plus then simply
+   follows the end of the sentence, so it lands in a different place on every
+   row, and the h3 also arrives with the browser's own heading type — 20px/700
+   with 20px margins instead of the 17px/500 the design asks for.
+
+   So the h3 takes over the row it displaced, and inherits the type it
+   replaced. Nothing else about the FAQ changes.
+   -------------------------------------------------------------------------- */
+.cex-placeholder .faq-item summary > .faq__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   5 · Mobile centring, for the parts this file introduces
+   -------------------------------------------------------------------------- */
+@media (max-width: 820px) {
+  .cex-placeholder .svc__body {
+    text-align: center;
+  }
+
+  .cex-placeholder .svc__list {
+    justify-content: center;
+  }
+
+  .cex-placeholder .svc__copy {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cex-placeholder .svc__pillar {
+    justify-content: center;
+  }
+}
