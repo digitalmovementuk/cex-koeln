@@ -600,3 +600,97 @@ html {
     justify-content: center;
   }
 }
+
+/* --------------------------------------------------------------------------
+   6 · The "Im Fokus" band, on a narrow screen
+
+   The band is built for one wide row: label on the left, a divider rule, then
+   the six focus areas separated by small orange squares. On a narrow screen
+   three separate things go wrong with it, and the third one is the loud one.
+
+   ONE. The label keeps align-self:stretch — correct in a row, where it makes
+   the divider run the full height of the band. In a column, stretch means full
+   WIDTH: the label spans the band, its text sits at the far left while
+   everything else is centred, and its border-right lands as a hairline against
+   the right edge of the screen, dividing nothing.
+
+   TWO. The separator square is drawn after every item except the last. On one
+   line that is punctuation. Once the six items wrap to three lines, each line
+   ends with a square pointing at the empty space beside it.
+
+   THREE, and the reason the band looked chaotic rather than merely untidy:
+   script.js turns the band into a marquee from 700px up, and the shared
+   stylesheet stacks the band into a column up to 768px. Between those two
+   numbers both are true at once. A marquee works by printing the list twice
+   and sliding the pair, so the two copies — which belong side by side on one
+   endless line — get stacked, and the visitor reads the same six words twice,
+   one line under the other, each clipped by the marquee's fade mask.
+
+   So below 768px the marquee is switched off outright and the band becomes
+   what it should have been at this width: a centred label over a centred,
+   wrapped list.
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  /* --- off with the marquee ------------------------------------------------ */
+  .cex-placeholder .trustband__inner.has-marquee {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  .cex-placeholder .trustband__inner.has-marquee .trustband__items {
+    flex-wrap: wrap;
+    animation: none;
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+
+  /* The second copy exists only to make the loop seamless. With no loop it is
+     duplicate text, and it is already aria-hidden, so a screen reader has been
+     skipping it all along. */
+  .cex-placeholder .trustband__items[aria-hidden="true"] {
+    display: none;
+  }
+
+  .cex-placeholder .trustband__inner.has-marquee .trustband__label {
+    margin-right: 0;
+  }
+
+  /* The fade that hid the items sliding in under the label. */
+  .cex-placeholder .trustband__inner.has-marquee .trustband__label::after {
+    content: none;
+  }
+
+  /* --- the label sits over the list, centred ------------------------------- */
+  .cex-placeholder .trustband__label {
+    align-self: center;
+    border-right: 0;
+    padding-right: 0;
+    padding-left: 20px;
+  }
+
+  /* --- space separates the items instead of squares ------------------------ */
+  /* The marquee rules carry one more class than a plain .trustband__items
+     selector does, so they keep winning until they are named. Naming them is
+     what the second line of each of these three rules is for; without it the
+     marquee's own gap:0 survives and the six words run into one another. */
+  .cex-placeholder .trustband__items,
+  .cex-placeholder .trustband__inner.has-marquee .trustband__items {
+    column-gap: 20px;
+    row-gap: 10px;
+    line-height: 1.15;
+  }
+
+  .cex-placeholder .trustband__items span,
+  .cex-placeholder .trustband__inner.has-marquee .trustband__items span {
+    padding: 0;
+  }
+
+  .cex-placeholder .trustband__items span::after,
+  .cex-placeholder .trustband__inner.has-marquee .trustband__items span::after {
+    content: none;
+  }
+
+  .cex-placeholder .trustband__inner {
+    gap: 14px;
+  }
+}
