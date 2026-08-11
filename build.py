@@ -275,6 +275,18 @@ DESC = ("CEx berät aus Köln zu Prozessoptimierung, Projektmanagement, "
         "Digitalisierung, Change Management, KI und Enterprise Architecture — "
         "Senior-Beratung für komplexe IT- und Digitalisierungsvorhaben.")
 
+# The share card is not the search result, and it must not be written like one.
+# Slack, WhatsApp, LinkedIn and iMessage all print the site name on its own line
+# above the title, so a title that opens with "CEx |" says CEx twice; and all of
+# them wrap the description to three or four dense lines, so a keyword list
+# reads as noise at the size it is actually seen. These two strings say the same
+# thing as TITLE and DESC in the shape a card can hold — and the headline is the
+# one already burnt into the picture, so card and image read as one object.
+# TITLE and DESC stay exactly as they are: they are the search result.
+SHARE_TITLE = "Komplexe Veränderungen, klare Umsetzung"
+SHARE_DESC = ("Unternehmensberatung aus Köln für Prozesse, Projekte, "
+              "Digitalisierung, Change, KI und Enterprise Architecture.")
+
 ORG_LD = """{
   "@context": "https://schema.org",
   "@type": ["Organization", "ProfessionalService"],
@@ -351,10 +363,21 @@ CSS = [
     "styles.css", "cx-design-system.css", "polish.css",
     "cx-hero.css", "cx-components.css", "founders.css", "placeholder.css",
 ]
-V = "20260811b"
+V = "20260811c"
 
-def head_shell(title, desc, canonical, extra_ld=(), body_class="", noindex=False):
-    """The one <head> every page on this site uses."""
+OG_IMAGE = f"https://cex.koeln/media/cex-og-1200x630.jpg?v={V}"
+OG_ALT = ("Kölner Dom und Hohenzollernbrücke, darüber der Satz "
+          "Komplexe Veränderungen, klare Umsetzung")
+
+def head_shell(title, desc, canonical, extra_ld=(), body_class="", noindex=False,
+               share_title=None, share_desc=None):
+    """The one <head> every page on this site uses.
+
+    share_title/share_desc are what the link preview shows. They default to the
+    search-result pair, because on most pages the two jobs want the same words.
+    """
+    share_title = share_title or title
+    share_desc = share_desc or desc
     ld = "\n".join(f'  <script type="application/ld+json">\n{block}\n  </script>'
                    for block in extra_ld)
     robots = "noindex, follow" if noindex else "index, follow"
@@ -372,19 +395,20 @@ def head_shell(title, desc, canonical, extra_ld=(), body_class="", noindex=False
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="CEx" />
   <meta property="og:locale" content="de_DE" />
-  <meta property="og:title" content="{title}" />
-  <meta property="og:description" content="{desc}" />
+  <meta property="og:title" content="{share_title}" />
+  <meta property="og:description" content="{share_desc}" />
   <meta property="og:url" content="{canonical}" />
-  <meta property="og:image" content="https://cex.koeln/media/cex-og-1200x630.jpg" />
+  <meta property="og:image" content="{OG_IMAGE}" />
+  <meta property="og:image:secure_url" content="{OG_IMAGE}" />
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Kölner Dom und Hohenzollernbrücke, darüber der Satz Komplexe Veränderungen, klare Umsetzung" />
+  <meta property="og:image:alt" content="{OG_ALT}" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{title}" />
-  <meta name="twitter:description" content="{desc}" />
-  <meta name="twitter:image" content="https://cex.koeln/media/cex-og-1200x630.jpg" />
-  <meta name="twitter:image:alt" content="Kölner Dom und Hohenzollernbrücke, darüber der Satz Komplexe Veränderungen, klare Umsetzung" />
+  <meta name="twitter:title" content="{share_title}" />
+  <meta name="twitter:description" content="{share_desc}" />
+  <meta name="twitter:image" content="{OG_IMAGE}" />
+  <meta name="twitter:image:alt" content="{OG_ALT}" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -412,7 +436,8 @@ def head_shell(title, desc, canonical, extra_ld=(), body_class="", noindex=False
 """
 
 head = head_shell(TITLE, DESC, "https://cex.koeln/",
-                  extra_ld=(ORG_LD, WEBPAGE_LD, FAQ_LD), body_class="home ")
+                  extra_ld=(ORG_LD, WEBPAGE_LD, FAQ_LD), body_class="home ",
+                  share_title=SHARE_TITLE, share_desc=SHARE_DESC)
 
 page = (
     head
@@ -523,23 +548,28 @@ def legal_chrome(markup):
     return re.sub(r'href="#', 'href="/#', rewrite_links(markup, prefix="/"))
 
 
+# The fourth field is the card title. The site name is already printed above it
+# in every messenger, so repeating "| CEx Unternehmensberatung Köln" there just
+# spends the one readable line on the word CEx twice.
 LEGAL = [
     ("impressum.html", "Impressum | CEx Unternehmensberatung Köln",
      "Impressum der CEx UG (haftungsbeschränkt), Stolberger Straße 90 a, "
-     "50825 Köln — Anbieterkennzeichnung nach § 5 DDG."),
+     "50825 Köln — Anbieterkennzeichnung nach § 5 DDG.",
+     "Impressum"),
     ("datenschutz.html", "Datenschutzerklärung | CEx Unternehmensberatung Köln",
      "Wie CEx personenbezogene Daten auf cex.koeln verarbeitet: Hosting, "
-     "Einwilligung, Kontaktanfragen, Ihre Rechte, KI-Transparenz."),
+     "Einwilligung, Kontaktanfragen, Ihre Rechte, KI-Transparenz.",
+     "Datenschutzerklärung"),
 ]
 
-for name, title, desc in LEGAL:
+for name, title, desc, share_title in LEGAL:
     body = (HERE / "legal" / name.replace(".html", "-body.html")
             ).read_text(encoding="utf-8")
     body = body[body.index("<main"):body.index("</main>") + len("</main>")]
 
     legal = (
         head_shell(title, desc, f"https://cex.koeln/{name}",
-                   body_class="cex-legal-page ")
+                   body_class="cex-legal-page ", share_title=share_title)
         + legal_chrome(HEADER)
         + "\n"
         + body
