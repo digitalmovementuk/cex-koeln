@@ -693,4 +693,201 @@ html {
   .cex-placeholder .trustband__inner {
     gap: 14px;
   }
+
+  /* --- and the six items sit on a grid, not on a wrapping row -------------- */
+  /* A centred wrapping row breaks wherever the words happen to run out, so the
+     three lines came out 286px, 257px and 233px wide and every line started
+     and ended somewhere different. Two equal columns give the block one centre
+     line down the middle and one on each side: whatever the words are, the
+     shape is the same. The width cap keeps the pairs reading as pairs instead
+     of being pushed out to opposite edges of the screen. */
+  .cex-placeholder .trustband__items,
+  .cex-placeholder .trustband__inner.has-marquee .trustband__items {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 14px;
+    row-gap: 12px;
+    width: 100%;
+    max-width: 340px;
+    margin-inline: auto;
+  }
+
+  .cex-placeholder .trustband__items span,
+  .cex-placeholder .trustband__inner.has-marquee .trustband__items span {
+    display: block;
+    text-align: center;
+    text-wrap: balance;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7 · The phone pass
+   --------------------------------------------------------------------------
+   Everything below applies only at phone widths. It is the second look at this
+   page on a real device, and it fixes four things that a desktop browser at a
+   narrow window never shows you.
+   -------------------------------------------------------------------------- */
+
+/* --- 7a · why the bottom bar hangs in mid-air on an iPhone ------------------
+   styles.css puts `overflow-x: hidden` on both html and body from 820px down,
+   to swallow the hero film, which is drawn ten pixels wider than the screen on
+   purpose.
+
+   On iOS that one line moves the whole page. `overflow: hidden` on the root
+   makes the document its own scroll container, and Safari then measures
+   `position: fixed` against that container instead of against the window. The
+   moment the two disagree is the moment the visitor flicks upwards: Safari is
+   sliding its own toolbar back in, the window is changing height under the
+   page, and the bar stays where the bottom of the window used to be — which is
+   somewhere in the middle of the screen.
+
+   `overflow-x: clip` clips exactly the same overflow and creates no scroll
+   container, so fixed goes back to meaning fixed. Safari has had it since 16;
+   the @supports wrapper leaves anything older with the old rule rather than
+   letting the film spill sideways, because a page that scrolls sideways is a
+   worse bug than a bar that lags.
+   -------------------------------------------------------------------------- */
+@supports (overflow: clip) {
+  @media (max-width: 820px) {
+    html,
+    body.cex-placeholder {
+      overflow-x: clip;
+      overflow-y: visible;
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  /* Second half of the same fix. A fixed element that has its own compositor
+     layer is carried along by the scroll; one that has not is re-placed only
+     when the scroll settles, and visibly catches up on the way there. The 3D
+     translate and will-change are what ask for the layer. */
+  .cta-dock {
+    transform: translate3d(0, 101%, 0);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+  }
+
+  .cta-dock.is-visible {
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* --- 7b · the two buttons in that bar ------------------------------------
+     The bar has 16px of air on the left and 16px on the right. The pulse then
+     grew the orange button by 3% and threw a 26px ring of the same orange out
+     past its edge, so on the right the colour ran to the edge of the screen
+     while on the left the phone button kept its margin. That asymmetry is what
+     reads as "the buttons are not centred" — the buttons are in the right
+     place; the ring around one of them is not.
+
+     A bar pinned to the bottom of the screen is already the loudest thing on
+     the page, so the ring goes rather than being made smaller. What is left is
+     two buttons of the same height, sitting on the same centre line, with the
+     same gap to each edge. */
+  .cta-dock.is-visible .cta-dock__btn--primary {
+    animation: none;
+  }
+
+  .cta-dock__actions {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .cta-dock__btn {
+    min-height: 48px;
+  }
+
+  .cta-dock__btn--primary {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  /* --- 7c · the arrow inside the two big headlines -------------------------
+     The CEx arrow is set as the first item of a flex row that also holds the
+     last words of the headline — "> klare Umsetzung" is one line by design.
+     On a phone those words wrap to two lines, the row grows taller, and the
+     arrow is centred against the pair of them: it ends up alone in the left
+     margin, level with the gap between two lines of type, pointing at nothing.
+     In the closing headline it lands mid-sentence, where it reads as a stray
+     character someone left in the copy.
+
+     It is decorative and already aria-hidden, so on a phone it steps out and
+     the headline is left as one clean centred block. It is unchanged from
+     769px up, where the line it belongs to fits. */
+  .cex-placeholder .hero__title-glyph,
+  .cex-placeholder .final-cta__headline-glyph {
+    display: none;
+  }
+
+  .cex-placeholder .hero__title-line--accent,
+  .cex-placeholder .final-cta__headline-accent {
+    display: block;
+    width: auto;
+  }
+
+  /* --- 7d · the four start-point rows ---------------------------------------
+     The shared stylesheet centres each row as a whole, so the numbered badge
+     travels with the length of its own label and the four badges land at four
+     different distances from the left edge. A fixed column for the badge puts
+     them back under one another, and the labels start on one line too. */
+  .cex-placeholder .outcomes__tab {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    justify-content: start;
+    text-align: left;
+    padding-inline: 22px;
+  }
+
+  .cex-placeholder .outcomes__tab-num {
+    justify-self: center;
+  }
+
+  .cex-placeholder .outcomes__tab-label {
+    text-align: left;
+  }
+
+  /* --- 7e · the two founders ------------------------------------------------
+     One name runs to a line and the other to two, so the word "Gründer" sat at
+     two different heights and the pair looked out of true. Holding two lines
+     of space for the name puts both roles on the same line. */
+  .cex-placeholder .cx-trust__founders figcaption b {
+    min-height: 2.5em;
+  }
+
+  /* The tick box is the one control on the page under the 24px minimum. */
+  .cex-placeholder .form__checkbox {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* --- 7f · room under the footer for the bar that sits on top of it ----------
+   The dock steps aside over the contact section, because it would cover the
+   form it points at. Below that section it comes back — and the footer is
+   below that section, so the last line of the page, the copyright, spent its
+   life behind the bar. The bar is 69px tall on a phone; the footer now ends
+   with that much clear space under it, so nothing is ever hidden.
+   -------------------------------------------------------------------------- */
+@media (max-width: 720px) {
+  .cex-placeholder .footer {
+    padding-bottom: 100px;
+  }
+
+  /* --- 7g · the top bar once it has shrunk ---------------------------------
+     Scrolled, the bar halves to 29px and the logo inside it is 20px, which
+     leaves four pixels of air above and below the only thing left in the bar
+     and gives the one link in it a 20px target — under the 24px minimum.
+     40px keeps the bar reading as the small version of itself and gives both
+     the logo and the finger somewhere to go. */
+  .cex-placeholder .nav.is-scrolled {
+    min-height: 40px;
+  }
+
+  .cex-placeholder .nav.is-scrolled .nav__brand {
+    min-height: 32px;
+  }
 }
