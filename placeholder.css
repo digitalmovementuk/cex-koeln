@@ -501,8 +501,10 @@ html {
   }
 }
 
-/* Phone-width: the sentence goes, the two buttons split the row. Two 44px
-   targets side by side beat one wide button with a caption above it. */
+/* Phone-width: the sentence goes and the one button takes the whole row. It
+   used to share the row with a phone button; since the number came off the site
+   on 2026-08-12 a single full-width target is the honest layout — a button
+   sized to its own text would leave half the bar empty. */
 @media (max-width: 720px) {
   .cta-dock__copy {
     display: none;
@@ -521,7 +523,7 @@ html {
   .cta-dock__actions {
     flex: 1 1 auto;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
 
@@ -773,24 +775,23 @@ html {
     transform: translate3d(0, 0, 0);
   }
 
-  /* --- 7b · the two buttons in that bar ------------------------------------
+  /* --- 7b · the button in that bar -----------------------------------------
      The bar has 16px of air on the left and 16px on the right. The pulse then
      grew the orange button by 3% and threw a 26px ring of the same orange out
-     past its edge, so on the right the colour ran to the edge of the screen
-     while on the left the phone button kept its margin. That asymmetry is what
-     reads as "the buttons are not centred" — the buttons are in the right
-     place; the ring around one of them is not.
+     past its edge, so the colour ran to the edge of the screen on one side
+     while the other side kept its margin. That asymmetry is what reads as "the
+     button is not centred" — the button is in the right place; the ring around
+     it is not.
 
      A bar pinned to the bottom of the screen is already the loudest thing on
      the page, so the ring goes rather than being made smaller. What is left is
-     two buttons of the same height, sitting on the same centre line, with the
-     same gap to each edge. */
+     one 48px button with the same gap to each edge. */
   .cta-dock.is-visible .cta-dock__btn--primary {
     animation: none;
   }
 
   .cta-dock__actions {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
   }
 

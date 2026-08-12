@@ -80,6 +80,13 @@ FOOTER = content[content.index("<footer"):].rstrip() + "\n"
 FOOTER = re.sub(r'<a href="/sitemap/"[^>]*>Sitemap</a>', "", FOOTER)
 assert "Sitemap</a>" not in FOOTER, "the footer Sitemap link changed shape"
 
+# No phone number is published on cex.koeln (client instruction, 2026-08-12). The
+# snapshot still carries one in the footer's Kontakt column, so it is stripped
+# here rather than in the output file — a re-snapshot would otherwise bring it
+# back. The assert makes a silent re-appearance impossible.
+FOOTER = re.sub(r'<a href="tel:[^"]*"[^>]*>.*?</a>', "", FOOTER)
+assert "tel:" not in FOOTER, "the footer telephone link changed shape"
+
 # "themen" is deliberately dropped: it is a list of links to roughly 28 subpages
 # that this one-page site does not carry.
 
@@ -220,10 +227,6 @@ DOCK = f"""  <div class="cta-dock" aria-label="Kontakt">
         <span>Sagen Sie uns, wo Sie stehen.</span>
       </p>
       <div class="cta-dock__actions">
-        <a class="cta-dock__btn cta-dock__btn--ghost" href="tel:+4917624161674">
-          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3h3l1.2 3-1.6 1.2a9 9 0 0 0 3.2 3.2L10 8.8 13 10v3a10 10 0 0 1-10-10Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="miter"/></svg>
-          <span>Anrufen</span>
-        </a>
         <a class="cta-dock__btn cta-dock__btn--primary" href="#kontakt">
           <span>Erstgespräch anfragen</span>
           {ARROW}
@@ -304,7 +307,6 @@ ORG_LD = """{
     "addressRegion": "Nordrhein-Westfalen",
     "addressCountry": "DE"
   },
-  "telephone": "+49 176 24161674",
   "vatID": "DE459231559",
   "email": "kontakt@cex.koeln",
   "areaServed": "DACH",
