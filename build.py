@@ -41,6 +41,13 @@ content = wp["content"]
 # The snapshot writes the theme folder as a placeholder; here it is just media/.
 content = content.replace("{{THEME_URI}}/media/", "media/")
 
+# The published address is info@cex.koeln (client instruction, 2026-08-12). The
+# snapshot still carries the old kontakt@ one in the footer and the contact
+# section, so it is rewritten here rather than in the output files — a
+# re-snapshot would otherwise bring it back. The assert makes that impossible.
+content = content.replace("kontakt@cex.koeln", "info@cex.koeln")
+assert "kontakt@cex.koeln" not in content, "the snapshot e-mail changed shape"
+
 
 def sections(markup):
     """Split post_content into its top-level <section> blocks, keyed by id.
@@ -308,7 +315,7 @@ ORG_LD = """{
     "addressCountry": "DE"
   },
   "vatID": "DE459231559",
-  "email": "kontakt@cex.koeln",
+  "email": "info@cex.koeln",
   "areaServed": "DACH",
   "founder": [
     { "@type": "Person", "name": "Johannes Reusch" },
@@ -525,12 +532,20 @@ CSS_FILES = ["styles.css", "cx-design-system.css", "polish.css",
 for name in CSS_FILES + ["favicon.svg"]:
     shutil.copy2(SRC / name, HERE / name)
 
-# --- script.js, verbatim ----------------------------------------------------
+# --- script.js, with one address rewritten ----------------------------------
 # The consent dialog is the production one, unchanged: script.js injects the
 # markup, opens it on the first visit and writes the answer to localStorage
 # under cxPrivacyConsent.v1. Nothing on this page reads a cookie, and nothing
 # optional loads before the visitor has answered.
-shutil.copy2(SRC / "script.js", HERE / "script.js")
+#
+# The single edit is the address in the "form could not be sent" fallback: this
+# site publishes info@cex.koeln, and the copy in ../github-cx still says
+# kontakt@. Rewritten on the way in so a fresh copy of the theme cannot quietly
+# put a dead address in front of someone whose form has just failed.
+script = (SRC / "script.js").read_text(encoding="utf-8")
+assert "kontakt@cex.koeln" in script, "script.js no longer carries the old address"
+(HERE / "script.js").write_text(
+    script.replace("kontakt@cex.koeln", "info@cex.koeln"), encoding="utf-8")
 
 shutil.copytree(SRC / "fonts", HERE / "fonts", dirs_exist_ok=True)
 

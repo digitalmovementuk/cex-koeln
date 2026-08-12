@@ -346,7 +346,7 @@ if (isStaticCExSite) {
         .catch(() => {
           if (status) {
             status.textContent =
-              'Die Anfrage konnte nicht gesendet werden. Bitte schreiben Sie uns direkt an kontakt@cex.koeln.';
+              'Die Anfrage konnte nicht gesendet werden. Bitte schreiben Sie uns direkt an info@cex.koeln.';
           }
         })
         .finally(() => {
