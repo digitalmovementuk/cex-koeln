@@ -363,7 +363,7 @@ CSS = [
     "styles.css", "cx-design-system.css", "polish.css",
     "cx-hero.css", "cx-components.css", "founders.css", "placeholder.css",
 ]
-V = "20260811e"
+V = "20260812a"
 
 OG_IMAGE = f"https://cex.koeln/media/cex-og-1200x630.jpg?v={V}"
 OG_ALT = ("Kölner Dom und Hohenzollernbrücke, darüber der Satz "

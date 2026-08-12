@@ -90,3 +90,60 @@
 
   map.forEach(function (_link, section) { observer.observe(section); });
 })();
+
+/* --------------------------------------------------------------------------
+   The second layer of the consent sheet
+   --------------------------------------------------------------------------
+   placeholder.css section 8 shortens the consent dialog on a phone to a sheet
+   at the bottom, so that the hero and the headline are visible while the
+   question is being asked. The four categories move out of that short sheet,
+   and this puts back the way into them: one link, "Einstellungen", sitting
+   with Datenschutz and Impressum.
+
+   The dialog itself is written by script.js, which build.py overwrites from
+   ../github-cx on every build — so it is left alone and decorated from here.
+   Both files are deferred and run in order, but script.js may inject on
+   DOMContentLoaded rather than immediately, so this waits for the dialog to
+   appear instead of assuming it already has.
+   -------------------------------------------------------------------------- */
+(function () {
+  function wire() {
+    var dialog = document.getElementById('privacy-consent');
+    if (!dialog || dialog.dataset.sheetWired) return !!dialog;
+
+    var links = dialog.querySelector('.privacy-consent__links');
+    var options = dialog.querySelector('.privacy-consent__options');
+    if (!links || !options) return false;
+
+    dialog.dataset.sheetWired = '1';
+    options.id = 'privacy-consent-options';
+
+    var more = document.createElement('button');
+    more.type = 'button';
+    more.className = 'privacy-consent__more';
+    more.textContent = 'Einstellungen';
+    more.setAttribute('aria-expanded', 'false');
+    more.setAttribute('aria-controls', 'privacy-consent-options');
+
+    more.addEventListener('click', function () {
+      dialog.classList.add('is-details-open');
+      more.setAttribute('aria-expanded', 'true');
+      var first = dialog.querySelector('.privacy-option input:not([disabled])');
+      if (first) first.focus({ preventScroll: true });
+    });
+
+    links.appendChild(more);
+    return true;
+  }
+
+  if (wire()) return;
+
+  var observer = new MutationObserver(function () {
+    if (wire()) observer.disconnect();
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (wire()) observer.disconnect();
+  });
+})();
