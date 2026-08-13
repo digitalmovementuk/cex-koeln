@@ -106,8 +106,8 @@ function injectConsentDialog() {
             <div class="privacy-consent__eyebrow">Privatsphäre</div>
             <h2 id="privacy-consent-title">Datenschutz-Einstellungen</h2>
             <p id="privacy-consent-copy">
-              Wir nutzen keine Werbe- oder Analyse-Cookies. Diese Einstellungen zeigen trotzdem klar,
-              welche Kategorien möglich wären. Optionale Kategorien bleiben aus, bis Sie zustimmen.
+              Optionale Kategorien bleiben aus, bis Sie zustimmen. Ablehnen geht genauso einfach
+              wie Zustimmen. Werbung und Profilbildung finden hier nicht statt.
             </p>
             <div class="privacy-consent__links" aria-label="Rechtliche Links">
               <a href="${privacyPageUrl}">Datenschutz</a>
@@ -133,7 +133,7 @@ function injectConsentDialog() {
             <label class="privacy-option">
               <span>
                 <strong>Statistik</strong>
-                <small>Derzeit nicht aktiv. Würde nur nach Zustimmung geladen.</small>
+                <small>Google Analytics. Misst, wie diese Seite genutzt wird. Wird erst nach Ihrer Zustimmung geladen.</small>
               </span>
               <input id="privacy-statistics" type="checkbox" />
             </label>

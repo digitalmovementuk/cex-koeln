@@ -372,7 +372,7 @@ CSS = [
     "styles.css", "cx-design-system.css", "polish.css",
     "cx-hero.css", "cx-components.css", "founders.css", "placeholder.css",
 ]
-V = "20260812a"
+V = "20260813a"
 
 OG_IMAGE = f"https://cex.koeln/media/cex-og-1200x630.jpg?v={V}"
 OG_ALT = ("Kölner Dom und Hohenzollernbrücke, darüber der Satz "
@@ -532,20 +532,53 @@ CSS_FILES = ["styles.css", "cx-design-system.css", "polish.css",
 for name in CSS_FILES + ["favicon.svg"]:
     shutil.copy2(SRC / name, HERE / name)
 
-# --- script.js, with one address rewritten ----------------------------------
-# The consent dialog is the production one, unchanged: script.js injects the
-# markup, opens it on the first visit and writes the answer to localStorage
-# under cxPrivacyConsent.v1. Nothing on this page reads a cookie, and nothing
-# optional loads before the visitor has answered.
+# --- script.js, with three sentences rewritten ------------------------------
+# The consent dialog is the production one: script.js injects the markup, opens
+# it on the first visit and writes the answer to localStorage under
+# cxPrivacyConsent.v1. Nothing optional loads before the visitor has answered.
 #
-# The single edit is the address in the "form could not be sent" fallback: this
-# site publishes info@cex.koeln, and the copy in ../github-cx still says
-# kontakt@. Rewritten on the way in so a fresh copy of the theme cannot quietly
-# put a dead address in front of someone whose form has just failed.
+# Three strings are rewritten on the way in, and every one of them has to be,
+# because the production copy stopped being true on this deployment:
+#
+#   1. The address in the "form could not be sent" fallback. This site
+#      publishes info@cex.koeln; ../github-cx still says kontakt@. Without the
+#      rewrite a fresh copy of the theme quietly puts a dead address in front
+#      of someone whose form has just failed.
+#
+#   2+3. The dialog's opening paragraph and the wording under "Statistik".
+#      Both say there is no analytics on the site. Since 13 Aug 2026 there is:
+#      cex-koeln.js loads Google Analytics 4 (G-912HZYR2BC) — but only after
+#      the Statistik box has been ticked. A consent dialog that misdescribes
+#      what it is asking about is not a valid consent under Art. 4 Nr. 11
+#      DSGVO, so this is a legal correction, not a style edit. The production
+#      theme is left alone: the WordPress site it feeds has no analytics.
+#
+# Each rewrite asserts on its source string first. A silent no-match here would
+# ship the old, now-false sentence, and nothing downstream would catch it.
 script = (SRC / "script.js").read_text(encoding="utf-8")
-assert "kontakt@cex.koeln" in script, "script.js no longer carries the old address"
-(HERE / "script.js").write_text(
-    script.replace("kontakt@cex.koeln", "info@cex.koeln"), encoding="utf-8")
+
+SCRIPT_REWRITES = [
+    ("kontakt@cex.koeln", "info@cex.koeln"),
+    (
+        "Wir nutzen keine Werbe- oder Analyse-Cookies. Diese Einstellungen "
+        "zeigen trotzdem klar,\n              welche Kategorien möglich wären. "
+        "Optionale Kategorien bleiben aus, bis Sie zustimmen.",
+        "Optionale Kategorien bleiben aus, bis Sie zustimmen. Ablehnen geht "
+        "genauso einfach\n              wie Zustimmen. Werbung und "
+        "Profilbildung finden hier nicht statt.",
+    ),
+    (
+        "<small>Derzeit nicht aktiv. Würde nur nach Zustimmung geladen.</small>",
+        "<small>Google Analytics. Misst, wie diese Seite genutzt wird. Wird "
+        "erst nach Ihrer Zustimmung geladen.</small>",
+    ),
+]
+
+for old, new in SCRIPT_REWRITES:
+    assert old in script, f"script.js no longer carries: {old[:60]!r}"
+    script = script.replace(old, new)
+
+(HERE / "script.js").write_text(script, encoding="utf-8")
 
 shutil.copytree(SRC / "fonts", HERE / "fonts", dirs_exist_ok=True)
 
